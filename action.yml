@@ -1,5 +1,5 @@
-name: 'Hello World'
-description: 'Greet someone'
+name: 'Staged dependencies action'
+description: 'Github Actions to implement R development stages for package development'
 inputs:
   staged-dependencies-version:  # id of input
     description: 'Version of staged.dependencies'
