@@ -1,0 +1,31 @@
+---
+name: License report action test
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    name: Test aragog
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Checkout test repo
+        uses: actions/checkout@v2
+        with:
+          repository: "openpharma/stageddeps.elecinfra"
+          path: "stageddeps.elecinfra"
+
+      - name: Test staged dependencies for elecinfra
+        uses: ./
+        with:
+          path: "stageddeps.elecinfra"
