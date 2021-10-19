@@ -20,7 +20,7 @@ runs:
           v_ubuntu_info <- setNames(ubuntu_info$V2, ubuntu_info$V1)
           if (v_ubuntu_info[['NAME']] != "Ubuntu") stop("only works on ubuntu")
           ubuntu_version <- v_ubuntu_info[['VERSION_ID']]
-          sys_deps_for_pkg <- remotes::system_requirements("ubuntu", ubuntu_version, path = "${{ github.event.repository.name }}")
+          sys_deps_for_pkg <- remotes::system_requirements("ubuntu", ubuntu_version, path = ".")
           sys_pgks <- gsub("^apt-get install -y ", "", sys_deps_for_pkg)
           has_pkgs <- vapply(sys_pgks, function(pkg) system2("dpkg", c("-l", pkg), stdout = NULL, stderr = NULL) == 0,  logical(1))
           if (any(!has_pkgs)) {
@@ -31,7 +31,6 @@ runs:
 
       - name: Install R package dependencies
         run: |
-          setwd("${{ github.event.repository.name }}")
           options(repos = c(CRAN = "https://cloud.r-project.org/"))
           ncores <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
           cat(paste("\n\nnumber of cores detected:", ncores, "\n\n"))
