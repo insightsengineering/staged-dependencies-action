@@ -1,10 +1,14 @@
-name: 'Staged dependencies action'
-description: 'Github Actions to implement R development stages for package development'
+name: "Staged dependencies action"
+description: "Github Actions to implement R development stages for package development"
 inputs:
-  staged-dependencies-version:  # id of input
-    description: 'Version of staged.dependencies'
+  staged-dependencies-version:
+    description: "Version of staged.dependencies"
     required: true
-    default: 'v0.2.2'
+    default: "v0.2.2"
+  path:
+    description: "Path to R package"
+    required: true
+    default: "."
 
 runs:
   using: "composite"
@@ -20,7 +24,7 @@ runs:
           v_ubuntu_info <- setNames(ubuntu_info$V2, ubuntu_info$V1)
           if (v_ubuntu_info[['NAME']] != "Ubuntu") stop("only works on ubuntu")
           ubuntu_version <- v_ubuntu_info[['VERSION_ID']]
-          sys_deps_for_pkg <- remotes::system_requirements("ubuntu", ubuntu_version, path = ".")
+          sys_deps_for_pkg <- remotes::system_requirements("ubuntu", ubuntu_version, path = "${{ inputs.path }}")
           sys_pgks <- gsub("^apt-get install -y ", "", sys_deps_for_pkg)
           has_pkgs <- vapply(sys_pgks, function(pkg) system2("dpkg", c("-l", pkg), stdout = NULL, stderr = NULL) == 0,  logical(1))
           if (any(!has_pkgs)) {
@@ -31,6 +35,7 @@ runs:
 
       - name: Install R package dependencies
         run: |
+          setwd("${{ inputs.path }}")
           options(repos = c(CRAN = "https://cloud.r-project.org/"))
           ncores <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
           cat(paste("\n\nnumber of cores detected:", ncores, "\n\n"))
