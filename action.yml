@@ -9,6 +9,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+      - name: Install dependencies
+        run: |
+          if (!require("remotes")) install.packages("remotes", repos="http://cran.us.r-project.org", upgrade = "never")
+        shell: Rscript {0}
+
       - name: Install system dependencies for R package
         run: |
           ubuntu_info <- read.csv("/etc/os-release", sep = "=", header = FALSE)
@@ -23,6 +28,7 @@ runs:
             system2("apt-get", c("install", "-y", sys_pgks[!has_pkgs]))
           }
         shell: Rscript {0}
+
       - name: Install R package dependencies
         run: |
           setwd("${{ github.event.repository.name }}")
