@@ -29,3 +29,5 @@ jobs:
         uses: ./
         with:
           path: "stageddeps.elecinfra"
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}

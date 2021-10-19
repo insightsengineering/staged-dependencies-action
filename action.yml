@@ -52,5 +52,3 @@ runs:
             staged.dependencies::install_deps(dep_structure = x, install_project = FALSE, verbose = TRUE)
           }
         shell: Rscript {0}
-        env:
-          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
