@@ -14,7 +14,7 @@ on:
 jobs:
   smoke-test:
     runs-on: ubuntu-latest
-    name: Test aragog
+    name: Test example
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
