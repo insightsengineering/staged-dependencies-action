@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        image: ["rocker:verse"]
+        image: ["rocker/verse"]
         tag: ["4.0.3", "4.1.0", "3.6.3"]
     steps:
       - name: Checkout repo
