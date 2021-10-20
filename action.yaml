@@ -19,6 +19,6 @@ runs:
         shell: Rscript {0}
 
       - name: Run system dependencies
-        run: ${GITHUB_ACTION_PATH}/install-staged-dependencies.R
+        run: ${GITHUB_ACTION_PATH}/install-staged-dependencies.R "${{ inputs.path }}" "${{ inputs.staged-dependencies-version }}"
         shell: sh
 
