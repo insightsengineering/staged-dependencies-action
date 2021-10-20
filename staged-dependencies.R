@@ -53,7 +53,7 @@ if (args$threads == 0) {
 }
 
 options(
-    staged.dependencies.token_mapping = split_to_map(token_mapping)
+    staged.dependencies.token_mapping = split_to_map(args$token_mapping)
 )
 
 
