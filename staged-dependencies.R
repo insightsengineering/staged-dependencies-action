@@ -2,6 +2,13 @@
 
 library("optparse")
 
+split_to_map = function(args){
+    tmp = strsplit(x =unlist(strsplit(args, ",")), "=")
+    content = unlist(lapply(tmp, function(x) x[2]))
+    names(content) = unlist(lapply(tmp, function(x) x[1]))
+    return(content)
+}
+
 option_list <- list( 
     make_option(c("-r", "--repo_path"), type="character", default=".",
         help="Path to directory containing the R package files. [default: \".\"]"),
@@ -13,6 +20,8 @@ option_list <- list(
         help="Number of theads to use during catalog render. 0 means autodetect [default: 0]"),
     make_option(c("-e", "--cran_repos"), type="character", default="CRAN=https://cloud.r-project.org/", 
         help="Cran repository list, sparated by comma. [default: CRAN=https://cloud.r-project.org/]"),
+    make_option(c("-b", "--cran_repos_biomarker"), action="store_true", default=FALSE, 
+        help="Add biomarker repos to cran repos")
     make_option(c("-c", "--check"), action="store_true", default=FALSE, 
         help="Run check_yamls_consistent")
     )
@@ -22,20 +31,18 @@ args <- parse_args(OptionParser(option_list=option_list))
 cat(paste("\nrepo_path: \"", args$repo_path, "\"\n", sep=""))
 cat(paste("staged_version: \"", args$staged_version, "\"\n", sep=""))
 cat(paste("git_ref: \"", args$git_ref, "\"\n", sep=""))
-cat(paste("threads: \"", args$threads, "\"\n\n", sep=""))
-cat(paste("check: \"", args$check, "\"\n\n", sep=""))
-cat(paste("cran_repos: \"", args$cran_repos, "\"\n\n", sep=""))
+cat(paste("threads: \"", args$threads, "\"\n", sep=""))
+cat(paste("check: \"", args$check, "\"\n", sep=""))
+cat(paste("cran_repos: \"", args$cran_repos, "\"\n", sep=""))
+cat(paste("cran_repos_biomarker: \"", args$cran_repos_biomarker, "\"\n", sep=""))
 
 setwd(args$repo_path)
 
-split_to_map = function(args){
-    tmp = strsplit(x =unlist(strsplit(args, ",")), "=")
-    content = unlist(lapply(tmp, function(x) x[2]))
-    names(content) = unlist(lapply(tmp, function(x) x[1]))
-    return(content)
+if (args$cran_repos_biomarker) {
+    options(repos = c(split_to_map(args$cran_repos), BiocManager::repositories()))
+} else {
+    options(repos = split_to_map(args$cran_repos))
 }
-
-options(repos = split_to_map(args$cran_repos))
 
 if (args$threads == 0) {
     args$threads <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
