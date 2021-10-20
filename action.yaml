@@ -15,21 +15,25 @@ runs:
   steps:
       - name: Install dependencies
         run: |
-          if (!require("remotes")) install.packages("remotes", repos="https://cloud.r-project.org/", upgrade = "never")
-          if (!require("optparse")) install.packages("optparse", repos="https://cloud.r-project.org/", upgrade = "never")
+          options(repos = c(CRAN = "https://cloud.r-project.org/"))
+          ncores <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
+          cat(paste("\n\nnumber of cores detected:", ncores, "\n\n"))
+          if (!require("remotes")) install.packages("remotes", upgrade = "never", Ncpus = ncores)
+          if (!require("optparse")) install.packages("optparse", upgrade = "never", Ncpus = ncores)
         shell: Rscript {0}
 
       - name: Run system dependencies
         run: >-
-          ${GITHUB_ACTION_PATH}/install-system-dependencies.R
+          ${GITHUB_ACTION_PATH}/system-dependencies.R
           --repo_path "${{ inputs.path }}"
         shell: sh
 
       - name: Run staged dependencies
         run: >-
-          ${GITHUB_ACTION_PATH}/install-staged-dependencies.R
+          ${GITHUB_ACTION_PATH}/staged-dependencies.R
           --repo_path "${{ inputs.path }}"
           --staged_version "${{ inputs.staged-dependencies-version }}"
           --git_ref "${{ github.ref }}"
+          --check
         shell: sh
 

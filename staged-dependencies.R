@@ -10,7 +10,9 @@ option_list <- list(
     make_option(c("-g", "--git_ref"), type="character", default="",
         help="Git reference. [default: \"\"]"),
     make_option(c("-t", "--threads"), type="integer", default=0, 
-        help="Number of theads to use during catalog render. 0 means autodetect [default: 0]")
+        help="Number of theads to use during catalog render. 0 means autodetect [default: 0]"),
+    make_option(c("-c", "--check"), action="store_true", default=FALSE, 
+        help="Run check_yamls_consistent")
     )
 
 args <- parse_args(OptionParser(option_list=option_list))
@@ -19,6 +21,7 @@ cat(paste("\nrepo_path: \"", args$repo_path, "\"\n", sep=""))
 cat(paste("staged_version: \"", args$staged_version, "\"\n", sep=""))
 cat(paste("git_ref: \"", args$git_ref, "\"\n", sep=""))
 cat(paste("threads: \"", args$threads, "\"\n\n", sep=""))
+cat(paste("check: \"", args$check, "\"\n\n", sep=""))
 
 
 setwd(args$repo_path)
@@ -52,6 +55,10 @@ if (file.exists("staged_dependencies.yaml")) {
 
     print(x, width = 120)
     cat("\n\n")
+
+    if(args$check){
+        staged.dependencies::check_yamls_consistent(x, skip_if_missing_yaml = TRUE)
+    }
 
     staged.dependencies::install_deps(dep_structure = x, install_project = FALSE, verbose = TRUE)
 }
