@@ -11,6 +11,8 @@ option_list <- list(
         help="Git reference. [default: \"\"]"),
     make_option(c("-t", "--threads"), type="integer", default=0, 
         help="Number of theads to use during catalog render. 0 means autodetect [default: 0]"),
+    make_option(c("-e", "--cran_repos"), type="character", default="CRAN=https://cloud.r-project.org/", 
+        help="Cran repository list, sparated by comma. [default: CRAN=https://cloud.r-project.org/]"),
     make_option(c("-c", "--check"), action="store_true", default=FALSE, 
         help="Run check_yamls_consistent")
     )
@@ -22,13 +24,21 @@ cat(paste("staged_version: \"", args$staged_version, "\"\n", sep=""))
 cat(paste("git_ref: \"", args$git_ref, "\"\n", sep=""))
 cat(paste("threads: \"", args$threads, "\"\n\n", sep=""))
 cat(paste("check: \"", args$check, "\"\n\n", sep=""))
-
+cat(paste("cran_repos: \"", args$cran_repos, "\"\n\n", sep=""))
 
 setwd(args$repo_path)
-options(repos = c(CRAN = "https://cloud.r-project.org/"))
+
+split_to_map = function(args){
+    tmp = strsplit(x =unlist(strsplit(args, ",")), "=")
+    content = unlist(lapply(tmp, function(x) x[2]))
+    names(content) = unlist(lapply(tmp, function(x) x[1]))
+    return(content)
+}
+
+options(repos = split_to_map(args$cran_repos))
 
 if (args$threads == 0) {
-  args$threads <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
+    args$threads <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
 }
 
 
@@ -57,6 +67,7 @@ if (file.exists("staged_dependencies.yaml")) {
     cat("\n\n")
 
     if(args$check){
+        cat("\nRunning check yaml consistent...\n\n")
         staged.dependencies::check_yamls_consistent(x, skip_if_missing_yaml = TRUE)
     }
 

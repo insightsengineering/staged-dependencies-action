@@ -5,6 +5,10 @@ inputs:
     description: "Version of staged.dependencies"
     required: true
     default: "v0.2.2"
+  cran-repositories-map:
+    description: "Version of staged.dependencies"
+    required: true
+    default: "CRAN=https://cloud.r-project.org/"
   path:
     description: "Path to R package"
     required: true
@@ -33,6 +37,7 @@ runs:
           ${GITHUB_ACTION_PATH}/staged-dependencies.R
           --repo_path "${{ inputs.path }}"
           --staged_version "${{ inputs.staged-dependencies-version }}"
+          --cran_repos "${{ inputs.cran-repositories-map }}"
           --git_ref "${{ github.ref }}"
           --check
         shell: sh
