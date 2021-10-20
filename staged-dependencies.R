@@ -21,7 +21,7 @@ option_list <- list(
     make_option(c("-e", "--cran_repos"), type="character", default="CRAN=https://cloud.r-project.org/", 
         help="Cran repository list, sparated by comma. [default: CRAN=https://cloud.r-project.org/]"),
     make_option(c("-b", "--cran_repos_biomarker"), action="store_true", default=FALSE, 
-        help="Add biomarker repos to cran repos")
+        help="Add biomarker repos to cran repos"),
     make_option(c("-c", "--check"), action="store_true", default=FALSE, 
         help="Run check_yamls_consistent")
     )
@@ -46,10 +46,8 @@ if (args$cran_repos_biomarker) {
 
 if (args$threads == 0) {
     args$threads <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
+    cat(paste("Number of cores detected:", args$threads, "\n\n"))
 }
-
-
-cat(paste("Number of cores detected:", args$threads, "\n\n"))
 
 if (file.exists("renv.lock")) {
     renv::restore()
