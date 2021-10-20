@@ -15,8 +15,8 @@ runs:
   steps:
       - name: Install dependencies
         run: |
-          if (!require("remotes")) install.packages("remotes", repos="http://cran.us.r-project.org", upgrade = "never")
-          if (!require("optparse")) install.packages("optparse", repos="http://cran.us.r-project.org", upgrade = "never")
+          if (!require("remotes")) install.packages("remotes", repos="https://cloud.r-project.org/", upgrade = "never")
+          if (!require("optparse")) install.packages("optparse", repos="https://cloud.r-project.org/", upgrade = "never")
         shell: Rscript {0}
 
       - name: Run system dependencies
