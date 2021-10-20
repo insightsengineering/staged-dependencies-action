@@ -22,6 +22,8 @@ option_list <- list(
         help="Cran repository list, sparated by comma. [default: CRAN=https://cloud.r-project.org/]"),
     make_option(c("-b", "--cran_repos_biomarker"), action="store_true", default=FALSE, 
         help="Add biomarker repos to cran repos"),
+    make_option(c("-m", "--token_mapping"), type="character", default="https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT", 
+        help="Cran repository list, sparated by comma. [default: https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT]"),
     make_option(c("-c", "--check"), action="store_true", default=FALSE, 
         help="Run check_yamls_consistent")
     )
@@ -35,6 +37,7 @@ cat(paste("threads: \"", args$threads, "\"\n", sep=""))
 cat(paste("check: \"", args$check, "\"\n", sep=""))
 cat(paste("cran_repos: \"", args$cran_repos, "\"\n", sep=""))
 cat(paste("cran_repos_biomarker: \"", args$cran_repos_biomarker, "\"\n", sep=""))
+cat(paste("token_mapping: \"", args$token_mapping, "\"\n", sep=""))
 
 setwd(args$repo_path)
 
@@ -48,6 +51,11 @@ if (args$threads == 0) {
     args$threads <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
     cat(paste("Number of cores detected:", args$threads, "\n\n"))
 }
+
+options(
+    staged.dependencies.token_mapping = split_to_map(token_mapping)
+)
+
 
 if (file.exists("renv.lock")) {
     renv::restore()
