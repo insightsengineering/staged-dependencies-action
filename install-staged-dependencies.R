@@ -1,54 +1,57 @@
 #!/usr/bin/env Rscript
 
-args = commandArgs(trailingOnly=TRUE)
-stopifnot(length(args) == 2)
+library("optparse")
 
-repo_path = args[1] # path to the repository
-sd_version = args[2] # staged.dependencies package version
+option_list <- list( 
+    make_option(c("-r", "--repo_path"), type="character", default=".",
+        help="Path to directory containing the R package files. [default: \".\"]"),
+    make_option(c("-s", "--staged_version"), type="character", default="v0.2.2",
+        help="Staged dependencies version. [default: \"v0.2.2\"]"),
+    make_option(c("-g", "--git_ref"), type="character", default="",
+        help="Git reference. [default: \"\"]"),
+    make_option(c("-t", "--threads"), type="integer", default=0, 
+        help="Number of theads to use during catalog render. 0 means autodetect [default: 0]")
+    )
 
-cat(paste("Path:", repo_path, "\n"))
-cat(paste("Staged dependencies version:", sd_version, "\n"))
+args <- parse_args(OptionParser(option_list=option_list))
+
+cat(paste("\nrepo_path: \"", args$repo_path, "\"\n", sep=""))
+cat(paste("staged_version: \"", args$staged_version, "\"\n", sep=""))
+cat(paste("git_ref: \"", args$git_ref, "\"\n", sep=""))
+cat(paste("threads: \"", args$threads, "\"\n\n", sep=""))
 
 
-os_info <- read.csv("/etc/os-release", sep = "=", header = FALSE)
-v_os_info <- setNames(os_info$V2, os_info$V1)
-if (v_os_info[['NAME']] == "Ubuntu") {
-    ubuntu_version <- v_os_info[['VERSION_ID']]
-    sys_deps_for_pkg <- remotes::system_requirements("ubuntu", ubuntu_version, path = repo_path)
-    sys_pgks <- gsub("^apt-get install -y ", "", sys_deps_for_pkg)
-    has_pkgs <- vapply(sys_pgks, function(pkg) system2("dpkg", c("-l", pkg), stdout = NULL, stderr = NULL) == 0,  logical(1))
-    if (any(!has_pkgs)) {
-        system2("apt-get", "update")
-        system2("apt-get", c("install", "-y", sys_pgks[!has_pkgs]))
-    }
-} else {
-    cat(paste("Script not implemented for:", v_os_info[['NAME']]))
+setwd(args$repo_path)
+options(repos = c(CRAN = "https://cloud.r-project.org/"))
+
+if (args$threads == 0) {
+  args$threads <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
 }
 
 
-setwd(repo_path)
-options(repos = c(CRAN = "https://cloud.r-project.org/"))
-ncores <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
-cat(paste("\n\nnumber of cores detected:", ncores, "\n\n"))
+cat(paste("Number of cores detected:", args$threads, "\n\n"))
+
 if (file.exists("renv.lock")) {
-renv::restore()
+    renv::restore()
 } else {
-remotes::install_deps(dependencies = TRUE, upgrade = "never", Ncpus = ncores)
+    remotes::install_deps(dependencies = TRUE, upgrade = "never", Ncpus = args$threads)
 }
 if (file.exists("staged_dependencies.yaml")) {
-cat("\nInstall Staged Dependencies\n\n\n")
-if (!require("staged.dependencies")) {
-    remotes::install_github("openpharma/staged.dependencies", ref = sd_version, Ncpus = ncores, upgrade = "never")
-}
-cat("\nCalculating Staged Dependency Table for ref: ${{ github.ref }} ...\n\n")
-ref = "${{ github.ref }}"
-if (startsWith(ref, "refs/tags")){
-    x <- staged.dependencies::dependency_table(ref=ref)
-}
-else {
-    x <- staged.dependencies::dependency_table()
-}
-print(x, width = 120)
-cat("\n\n")
-staged.dependencies::install_deps(dep_structure = x, install_project = FALSE, verbose = TRUE)
+    cat("Install Staged Dependencies\n\n")
+    if (!require("staged.dependencies")) {
+        remotes::install_github("openpharma/staged.dependencies", ref = args$staged_version, Ncpus = args$threads, upgrade = "never")
+    }
+
+    cat(paste("\nCalculating Staged Dependency Table for ref: ", args$git_ref, "...\n\n"))
+    if (startsWith(args$git_ref, "refs/tags")){
+        x <- staged.dependencies::dependency_table(ref=args$git_ref)
+    }
+    else {
+        x <- staged.dependencies::dependency_table()
+    }
+
+    print(x, width = 120)
+    cat("\n\n")
+
+    staged.dependencies::install_deps(dep_structure = x, install_project = FALSE, verbose = TRUE)
 }

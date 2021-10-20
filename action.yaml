@@ -16,9 +16,20 @@ runs:
       - name: Install dependencies
         run: |
           if (!require("remotes")) install.packages("remotes", repos="http://cran.us.r-project.org", upgrade = "never")
+          if (!require("optparse")) install.packages("optparse", repos="http://cran.us.r-project.org", upgrade = "never")
         shell: Rscript {0}
 
       - name: Run system dependencies
-        run: ${GITHUB_ACTION_PATH}/install-staged-dependencies.R "${{ inputs.path }}" "${{ inputs.staged-dependencies-version }}"
+        run: >-
+          ${GITHUB_ACTION_PATH}/install-system-dependencies.R
+          --repo_path "${{ inputs.path }}"
+        shell: sh
+
+      - name: Run staged dependencies
+        run: >-
+          ${GITHUB_ACTION_PATH}/install-staged-dependencies.R
+          --repo_path "${{ inputs.path }}"
+          --staged_version "${{ inputs.staged-dependencies-version }}"
+          --git_ref "${{ github.ref }}"
         shell: sh
 
