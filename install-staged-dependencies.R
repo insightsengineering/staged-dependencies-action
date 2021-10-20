@@ -3,9 +3,7 @@
 args = commandArgs(trailingOnly=TRUE)
 stopifnot(length(args) == 2)
 
-repo_path = args[1]
-setwd(repo_name)
-
+repo_path = args[1] # path to the repository
 sd_version = args[2] # staged.dependencies package version
 
 cat(paste("Path:", repo_path, "\n"))
