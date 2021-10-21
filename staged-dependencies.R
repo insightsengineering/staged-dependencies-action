@@ -69,12 +69,13 @@ if (file.exists("staged_dependencies.yaml")) {
     }
 
     cat(paste("\nCalculating Staged Dependency Table for ref: ", args$git_ref, "...\n\n"))
-    if (startsWith(args$git_ref, "refs/tags")){
-        x <- staged.dependencies::dependency_table(ref=args$git_ref)
-    }
-    else {
-        x <- staged.dependencies::dependency_table()
-    }
+    x <- staged.dependencies::dependency_table(ref=args$git_ref)
+    # if (startsWith(args$git_ref, "refs/tags")){
+    #     x <- staged.dependencies::dependency_table(ref=args$git_ref)
+    # }
+    # else {
+    #     x <- staged.dependencies::dependency_table()
+    # }
 
     print(x, width = 120)
     cat("\n\n")
