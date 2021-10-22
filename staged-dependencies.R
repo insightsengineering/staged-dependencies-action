@@ -29,7 +29,7 @@ cat("==================================\n")
 
 setwd(repo_path)
 
-if (cran_repos_biomarker) {
+if (cran_repos_biomarker == "true") {
     options(repos = c(split_to_map(cran_repos), BiocManager::repositories()))
 } else {
     options(repos = split_to_map(cran_repos))
