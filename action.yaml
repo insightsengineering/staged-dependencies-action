@@ -23,4 +23,3 @@ runs:
         shell: sh
         env:
           SD_GIT_REF: ${{ github.ref }}
-
