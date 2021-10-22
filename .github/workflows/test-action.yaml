@@ -36,3 +36,23 @@ jobs:
         env:
           SD_REPO_PATH: "stageddeps.elecinfra"
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install BiocManager
+        run: |
+          options(repos = c(CRAN = "https://cloud.r-project.org/"))
+          ncores <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
+          cat(paste("\n\nnumber of cores detected:", ncores, "\n\n"))
+          if (!require("BiocManager")) install.packages("BiocManager", upgrade = "never", Ncpus = ncores)
+        shell: Rscript {0}
+
+      - name: Test staged dependencies with more parameters
+        uses: ./
+        env:
+          SD_REPO_PATH: "stageddeps.elecinfra"
+          SD_STAGED_DEPENDENCIES_VERSION: "v0.2.2"
+          SD_THREADS: "2"
+          SD_CRAN_REPOSITORIES: "CRAN=https://cloud.r-project.org/"
+          SD_TOKEN_MAPPING: "https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT"
+          SD_ENABLE_BIOMERKER_REPOSITORIES: "true"
+          SD_ENABLE_CHECK: "false"
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
