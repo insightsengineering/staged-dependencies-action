@@ -3,7 +3,7 @@
 repo_path <- Sys.getenv("SD_REPO_PATH", ".")
 
 cat("\n==================================\n")
-cat(paste("\nrepo_path: \"", repo_path, "\"\n", sep=""))
+cat(paste("repo_path: \"", repo_path, "\"\n", sep=""))
 cat("==================================\n")
 
 
