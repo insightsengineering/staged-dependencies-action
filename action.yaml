@@ -21,4 +21,6 @@ runs:
       - name: Run staged dependencies
         run: ${GITHUB_ACTION_PATH}/staged-dependencies.R
         shell: sh
+        env:
+          SD_GIT_REF: ${{ github.ref }}
 
