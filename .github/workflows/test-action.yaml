@@ -1,5 +1,5 @@
 ---
-name: License report action test
+name: Staged dependencies action test
 
 on:
   push:
