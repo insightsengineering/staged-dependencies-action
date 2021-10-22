@@ -10,7 +10,6 @@ runs:
         run: |
           options(repos = c(CRAN = "https://cloud.r-project.org/"))
           ncores <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
-          cat(paste("\n\nnumber of cores detected:", ncores, "\n\n"))
           if (!require("remotes")) install.packages("remotes", upgrade = "never", Ncpus = ncores)
         shell: Rscript {0}
 
