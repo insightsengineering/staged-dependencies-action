@@ -33,7 +33,6 @@ jobs:
 
       - name: Test staged dependencies for elecinfra
         uses: ./
-        with:
-          path: "stageddeps.elecinfra"
         env:
+          SD_REPO_PATH: "stageddeps.elecinfra"
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}

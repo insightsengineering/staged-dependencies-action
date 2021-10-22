@@ -1,7 +1,5 @@
 #!/usr/bin/env Rscript
 
-library("optparse")
-
 split_to_map = function(args){
     tmp = strsplit(x =unlist(strsplit(args, ",")), "=")
     content = unlist(lapply(tmp, function(x) x[2]))
@@ -9,78 +7,67 @@ split_to_map = function(args){
     return(content)
 }
 
-option_list <- list( 
-    make_option(c("-r", "--repo_path"), type="character", default=".",
-        help="Path to directory containing the R package files. [default: \".\"]"),
-    make_option(c("-s", "--staged_version"), type="character", default="v0.2.2",
-        help="Staged dependencies version. [default: \"v0.2.2\"]"),
-    make_option(c("-g", "--git_ref"), type="character", default="",
-        help="Git reference. [default: \"\"]"),
-    make_option(c("-t", "--threads"), type="integer", default=0, 
-        help="Number of theads to use during catalog render. 0 means autodetect [default: 0]"),
-    make_option(c("-e", "--cran_repos"), type="character", default="CRAN=https://cloud.r-project.org/", 
-        help="Cran repository list, sparated by comma. [default: CRAN=https://cloud.r-project.org/]"),
-    make_option(c("-b", "--cran_repos_biomarker"), action="store_true", default=FALSE, 
-        help="Add biomarker repos to cran repos"),
-    make_option(c("-m", "--token_mapping"), type="character", default="https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT", 
-        help="Cran repository list, sparated by comma. [default: https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT]"),
-    make_option(c("-c", "--check"), action="store_true", default=FALSE, 
-        help="Run check_yamls_consistent")
-    )
+repo_path <- Sys.getenv("SD_REPO_PATH", ".")
+staged_version <- Sys.getenv("SD_STAGED_DEPENDENCIES_VERSION", "v0.2.2")
+git_ref <- Sys.getenv("SD_GIT_REF")
+threads <- Sys.getenv("SD_THREADS", "auto")
+cran_repos <- Sys.getenv("SD_CRAN_REPOSITORIES", "CRAN=https://cloud.r-project.org/")
+cran_repos_biomarker <- Sys.getenv("SD_ENABLE_BIOMERKER_REPOSITORIES", "false")
+token_mapping <- Sys.getenv("SD_TOKEN_MAPPING", "https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT")
+check <- Sys.getenv("SD_ENABLE_CHECK", "true")
 
-args <- parse_args(OptionParser(option_list=option_list))
 
-cat(paste("\nrepo_path: \"", args$repo_path, "\"\n", sep=""))
-cat(paste("staged_version: \"", args$staged_version, "\"\n", sep=""))
-cat(paste("git_ref: \"", args$git_ref, "\"\n", sep=""))
-cat(paste("threads: \"", args$threads, "\"\n", sep=""))
-cat(paste("check: \"", args$check, "\"\n", sep=""))
-cat(paste("cran_repos: \"", args$cran_repos, "\"\n", sep=""))
-cat(paste("cran_repos_biomarker: \"", args$cran_repos_biomarker, "\"\n", sep=""))
-cat(paste("token_mapping: \"", args$token_mapping, "\"\n", sep=""))
+cat(paste("\nrepo_path: \"", repo_path, "\"\n", sep=""))
+cat(paste("staged_version: \"", staged_version, "\"\n", sep=""))
+cat(paste("git_ref: \"", git_ref, "\"\n", sep=""))
+cat(paste("threads: \"", threads, "\"\n", sep=""))
+cat(paste("check: \"", check, "\"\n", sep=""))
+cat(paste("cran_repos: \"", cran_repos, "\"\n", sep=""))
+cat(paste("cran_repos_biomarker: \"", cran_repos_biomarker, "\"\n", sep=""))
+cat(paste("token_mapping: \"", token_mapping, "\"\n", sep=""))
 
-setwd(args$repo_path)
+setwd(repo_path)
 
-if (args$cran_repos_biomarker) {
-    options(repos = c(split_to_map(args$cran_repos), BiocManager::repositories()))
+if (cran_repos_biomarker) {
+    options(repos = c(split_to_map(cran_repos), BiocManager::repositories()))
 } else {
-    options(repos = split_to_map(args$cran_repos))
+    options(repos = split_to_map(cran_repos))
 }
 
-if (args$threads == 0) {
-    args$threads <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
-    cat(paste("Number of cores detected:", args$threads, "\n\n"))
+if (threads == "auto") {
+    threads <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
+    cat(paste("Number of cores detected:", threads, "\n\n"))
 }
 
 options(
-    staged.dependencies.token_mapping = split_to_map(args$token_mapping)
+    staged.dependencies.token_mapping = split_to_map(token_mapping)
 )
 
 
 if (file.exists("renv.lock")) {
     renv::restore()
 } else {
-    remotes::install_deps(dependencies = TRUE, upgrade = "never", Ncpus = args$threads)
+    remotes::install_deps(dependencies = TRUE, upgrade = "never", Ncpus = threads)
 }
 if (file.exists("staged_dependencies.yaml")) {
     cat("Install Staged Dependencies\n\n")
     if (!require("staged.dependencies")) {
-        remotes::install_github("openpharma/staged.dependencies", ref = args$staged_version, Ncpus = args$threads, upgrade = "never")
+        remotes::install_github("openpharma/staged.dependencies", ref = staged_version, Ncpus = threads, upgrade = "never")
     }
 
-    cat(paste("\nCalculating Staged Dependency Table for ref: ", args$git_ref, "...\n\n"))
-    x <- staged.dependencies::dependency_table(ref=args$git_ref)
-    # if (startsWith(args$git_ref, "refs/tags")){
-    #     x <- staged.dependencies::dependency_table(ref=args$git_ref)
-    # }
-    # else {
-    #     x <- staged.dependencies::dependency_table()
-    # }
+    cat(paste("\nCalculating Staged Dependency Table for ref: ", git_ref, "...\n\n"))
+
+    if (git_ref != ""){
+        x <- staged.dependencies::dependency_table(ref=git_ref)
+    } else {
+        x <- staged.dependencies::dependency_table()
+    }
+
 
     print(x, width = 120)
     cat("\n\n")
 
-    if(args$check){
+    if(check){
         cat("\nRunning check yaml consistent...\n\n")
         staged.dependencies::check_yamls_consistent(x, skip_if_missing_yaml = TRUE)
     }

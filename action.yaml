@@ -1,19 +1,8 @@
 name: "Staged dependencies action"
 description: "Github Actions to implement R development stages for package development"
-inputs:
-  staged-dependencies-version:
-    description: "Version of staged.dependencies"
-    required: true
-    default: "v0.2.2"
-  cran-repositories-map:
-    description: "Version of staged.dependencies"
-    required: true
-    default: "CRAN=https://cloud.r-project.org/"
-  path:
-    description: "Path to R package"
-    required: true
-    default: "."
-## Add consistency check
+branding:
+  icon: 'arrow-down'
+  color: 'blue'
 runs:
   using: "composite"
   steps:
@@ -23,22 +12,13 @@ runs:
           ncores <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
           cat(paste("\n\nnumber of cores detected:", ncores, "\n\n"))
           if (!require("remotes")) install.packages("remotes", upgrade = "never", Ncpus = ncores)
-          if (!require("optparse")) install.packages("optparse", upgrade = "never", Ncpus = ncores)
         shell: Rscript {0}
 
       - name: Run system dependencies
-        run: >-
-          ${GITHUB_ACTION_PATH}/system-dependencies.R
-          --repo_path "${{ inputs.path }}"
+        run: ${GITHUB_ACTION_PATH}/system-dependencies.R
         shell: sh
 
       - name: Run staged dependencies
-        run: >-
-          ${GITHUB_ACTION_PATH}/staged-dependencies.R
-          --repo_path "${{ inputs.path }}"
-          --staged_version "${{ inputs.staged-dependencies-version }}"
-          --cran_repos "${{ inputs.cran-repositories-map }}"
-          --git_ref "${{ github.ref }}"
-          --check
+        run: ${GITHUB_ACTION_PATH}/staged-dependencies.R
         shell: sh
 
