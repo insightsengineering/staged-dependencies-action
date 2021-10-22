@@ -16,8 +16,8 @@ cran_repos_biomarker <- Sys.getenv("SD_ENABLE_BIOMERKER_REPOSITORIES", "false")
 token_mapping <- Sys.getenv("SD_TOKEN_MAPPING", "https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT")
 check <- Sys.getenv("SD_ENABLE_CHECK", "true")
 
-
-cat(paste("\nrepo_path: \"", repo_path, "\"\n", sep=""))
+cat("\n==================================\n")
+cat(paste("repo_path: \"", repo_path, "\"\n", sep=""))
 cat(paste("staged_version: \"", staged_version, "\"\n", sep=""))
 cat(paste("git_ref: \"", git_ref, "\"\n", sep=""))
 cat(paste("threads: \"", threads, "\"\n", sep=""))
@@ -25,6 +25,7 @@ cat(paste("check: \"", check, "\"\n", sep=""))
 cat(paste("cran_repos: \"", cran_repos, "\"\n", sep=""))
 cat(paste("cran_repos_biomarker: \"", cran_repos_biomarker, "\"\n", sep=""))
 cat(paste("token_mapping: \"", token_mapping, "\"\n", sep=""))
+cat("==================================\n")
 
 setwd(repo_path)
 

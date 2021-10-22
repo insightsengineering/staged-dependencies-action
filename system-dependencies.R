@@ -2,7 +2,9 @@
 
 repo_path <- Sys.getenv("SD_REPO_PATH", ".")
 
+cat("\n==================================\n")
 cat(paste("\nrepo_path: \"", repo_path, "\"\n", sep=""))
+cat("==================================\n")
 
 
 os_info <- read.csv("/etc/os-release", sep = "=", header = FALSE)
