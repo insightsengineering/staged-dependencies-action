@@ -68,7 +68,7 @@ if (file.exists("staged_dependencies.yaml")) {
     print(x, width = 120)
     cat("\n\n")
 
-    if(check){
+    if(check == "true"){
         cat("\nRunning check yaml consistent...\n\n")
         staged.dependencies::check_yamls_consistent(x, skip_if_missing_yaml = TRUE)
     }
