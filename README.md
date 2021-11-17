@@ -81,7 +81,7 @@ The staged-dependencies-action allows you to pass the following `ENV` variables 
 | **SD_STAGED_DEPENDENCIES_VERSION** | `v0.2.2` | version of [staged.dependencies] to use. Action is compatilble with `>=0.2.2` |
 | **SD_THREADS** | `auto` | Number of threads that is use in `Ncpus` |
 | **SD_CRAN_REPOSITORIES** | `CRAN=https://cloud.r-project.org/` | Map of cran option repos delimited by comma |
-| **SD_ENABLE_BIOMERKER_REPOSITORIES** | `false` | Add `BiocManager::repositories()` to option repos |
+| **SD_ENABLE_BIOMARKER_REPOSITORIES** | `false` | Add `BiocManager::repositories()` to option repos |
 | **SD_TOKEN_MAPPING** | `https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT` | Token mapping that is used in `staged.dependencies.token_mapping` delimited by comma |
 | **SD_ENABLE_CHECK** | `true` | Run `check_yamls_consistent` before installation of dependencies |
 | **SD_GIT_REF** | `${{ github.ref }}` | Git reference |
