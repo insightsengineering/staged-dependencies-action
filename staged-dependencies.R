@@ -12,7 +12,7 @@ staged_version <- Sys.getenv("SD_STAGED_DEPENDENCIES_VERSION", "v0.2.2")
 git_ref <- Sys.getenv("SD_GIT_REF")
 threads <- Sys.getenv("SD_THREADS", "auto")
 cran_repos <- Sys.getenv("SD_CRAN_REPOSITORIES", "CRAN=https://cloud.r-project.org/")
-cran_repos_biomarker <- Sys.getenv("SD_ENABLE_BIOMERKER_REPOSITORIES", "false")
+cran_repos_biomarker <- Sys.getenv("SD_ENABLE_BIOMARKER_REPOSITORIES", "false")
 token_mapping <- Sys.getenv("SD_TOKEN_MAPPING", "https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT")
 check <- Sys.getenv("SD_ENABLE_CHECK", "true")
 
