@@ -3,12 +3,11 @@ name: Staged dependencies action test
 
 on:
   push:
-    tags:
-      - "v*"
     branches:
       - main
-      - pre-release
   pull_request:
+    branches:
+      - main
 
 jobs:
   smoke-test:
