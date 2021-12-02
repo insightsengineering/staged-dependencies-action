@@ -1,24 +1,34 @@
 name: "Staged dependencies action"
 description: "Github Actions to implement R development stages for package development"
+inputs:
+  run-system-dependencies:
+    description: Check for an install system dependencies
+    required: false
+    default: false
 branding:
   icon: 'arrow-down'
   color: 'blue'
 runs:
   using: "composite"
   steps:
-      - name: Install dependencies
-        run: |
-          options(repos = c(CRAN = "https://cloud.r-project.org/"))
-          ncores <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
-          if (!require("remotes")) install.packages("remotes", upgrade = "never", Ncpus = ncores)
-        shell: Rscript {0}
+    - name: Install dependencies
+      run: |
+        options(repos = c(CRAN = "https://cloud.r-project.org/"))
+        ncores <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
+        if (!require("remotes")) install.packages("remotes", upgrade = "never", Ncpus = ncores)
+      shell: Rscript {0}
 
-      - name: Run system dependencies
-        run: ${GITHUB_ACTION_PATH}/system-dependencies.R
-        shell: sh
+    - name: Run system dependencies
+      run: |
+        if [ "${{ inputs.run-system-dependencies }}" = "true" ]
+        then {
+          ${GITHUB_ACTION_PATH}/system-dependencies.R
+        }
+        fi
+      shell: sh
 
-      - name: Run staged dependencies
-        run: ${GITHUB_ACTION_PATH}/staged-dependencies.R
-        shell: sh
-        env:
-          SD_GIT_REF: ${{ github.ref }}
+    - name: Run staged dependencies
+      run: ${GITHUB_ACTION_PATH}/staged-dependencies.R
+      shell: sh
+      env:
+        SD_GIT_REF: ${{ github.ref }}

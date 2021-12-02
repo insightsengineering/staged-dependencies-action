@@ -53,6 +53,8 @@ jobs:
 
       - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
+        with:
+          run-system-dependencies: true
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       
