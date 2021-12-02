@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         image: ["rocker/verse"]
-        tag: ["4.1.0", "4.0.3", "3.6.3"]
+        tag: ["4.1.2", "4.1.0", "4.0.3", "3.6.3"]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -36,6 +36,14 @@ jobs:
         env:
           SD_REPO_PATH: "stageddeps.elecinfra"
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Test with system requirements installation
+        uses: ./
+        env:
+          SD_REPO_PATH: "stageddeps.elecinfra"
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          run-system-dependencies: true
 
       - name: Install BiocManager
         run: |
