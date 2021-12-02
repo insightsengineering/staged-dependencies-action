@@ -23,7 +23,7 @@ token_mapping <- Sys.getenv(
 check <- Sys.getenv("SD_ENABLE_CHECK", "true")
 
 cat("\n==================================\n")
-cat("\nRunning staged dependencies installer\n")
+cat("Running staged dependencies installer\n")
 cat(paste("repo_path: \"", repo_path, "\"\n", sep = ""))
 cat(paste("staged_version: \"", staged_version, "\"\n", sep = ""))
 cat(paste("git_ref: \"", git_ref, "\"\n", sep = ""))

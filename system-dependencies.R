@@ -3,7 +3,7 @@
 repo_path <- Sys.getenv("SD_REPO_PATH", ".")
 
 cat("\n==================================\n")
-cat("\nRunning system dependencies installer\n")
+cat("Running system dependencies installer\n")
 cat(paste("repo_path: \"", repo_path, "\"\n", sep = ""))
 cat("==================================\n")
 
