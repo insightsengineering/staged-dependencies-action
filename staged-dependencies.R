@@ -72,7 +72,7 @@ if (file.exists("staged_dependencies.yaml")) {
     "\nCalculating Staged Dependency Table for ref: ", git_ref, "...\n\n"
   ))
 
-  if (git_ref != "" && !startsWith(git_ref, "refs/pull")) {
+  if (git_ref != "" && !startsWith(git_ref, "refs/pull") && !startsWith(git_ref, "refs/head")) {
     x <- staged.dependencies::dependency_table(ref = git_ref)
   } else {
     x <- staged.dependencies::dependency_table()
