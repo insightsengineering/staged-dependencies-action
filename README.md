@@ -80,7 +80,7 @@ The staged-dependencies-action allows you to pass the following `ENV` variables 
 | **ENV VAR** | **Default Value** | **Notes** |
 | ----------- | ----------------- | --------- |
 | **SD_REPO_PATH** | `.` | path to the R package |
-| **SD_STAGED_DEPENDENCIES_VERSION** | `v0.2.4` | version of [staged.dependencies] to use. Action is compatilble with `>=0.2.2` |
+| **SD_STAGED_DEPENDENCIES_VERSION** | `v0.2.7` | version of [staged.dependencies] to use. Action is compatilble with `>=0.2.2` |
 | **SD_THREADS** | `auto` | Number of threads that is use in `Ncpus` |
 | **SD_CRAN_REPOSITORIES** | `CRAN=https://cloud.r-project.org/` | Map of cran option repos delimited by comma |
 | **SD_ENABLE_BIOMARKER_REPOSITORIES** | `false` | Add `BiocManager::repositories()` to option repos |
