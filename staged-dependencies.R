@@ -107,3 +107,6 @@ if (file.exists("staged_dependencies.yaml")) {
     Ncpus = threads
   )
 }
+
+# Install any remaining dependencies
+remotes::install_deps(dependencies = TRUE, upgrade = "never", Ncpus = threads)
