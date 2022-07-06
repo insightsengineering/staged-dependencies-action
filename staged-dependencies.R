@@ -103,7 +103,6 @@ if (file.exists("staged_dependencies.yaml")) {
     install_project = FALSE,
     verbose = 1,
     install_external_deps = TRUE,
-    dependencies = TRUE,
     upgrade = "never",
     Ncpus = threads
   )
