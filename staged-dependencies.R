@@ -85,12 +85,9 @@ if (file.exists("staged_dependencies.yaml")) {
   if (git_ref != "" &&
     !startsWith(git_ref, "refs/pull") &&
     !startsWith(git_ref, "refs/head")) {
-    x <- staged.dependencies::dependency_table(
-      ref = git_ref,
-      direction = "upstream"
-    )
+    x <- staged.dependencies::dependency_table(ref = git_ref)
   } else {
-    x <- staged.dependencies::dependency_table(direction = "upstream")
+    x <- staged.dependencies::dependency_table()
   }
 
   print(x, width = 120)
@@ -110,9 +107,4 @@ if (file.exists("staged_dependencies.yaml")) {
     upgrade = "never",
     Ncpus = threads
   )
-}
-
-# Restore original DESCRIPTION file from backup
-if (file.exists("DESCRIPTION.sdaction")) {
-  file.copy("DESCRIPTION.sdaction", "DESCRIPTION", overwrite = TRUE)
 }
