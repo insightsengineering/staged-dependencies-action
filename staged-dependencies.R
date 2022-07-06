@@ -8,7 +8,7 @@ split_to_map <- function(args) {
 }
 
 repo_path <- Sys.getenv("SD_REPO_PATH", ".")
-staged_version <- Sys.getenv("SD_STAGED_DEPENDENCIES_VERSION", "v0.2.7")
+sd_version <- Sys.getenv("SD_STAGED_DEPENDENCIES_VERSION", "v0.2.7")
 git_ref <- Sys.getenv("SD_GIT_REF")
 threads <- Sys.getenv("SD_THREADS", "auto")
 cran_repos <- Sys.getenv(
@@ -25,7 +25,7 @@ check <- Sys.getenv("SD_ENABLE_CHECK", "true")
 cat("\n==================================\n")
 cat("Running staged dependencies installer\n")
 cat(paste("repo_path: \"", repo_path, "\"\n", sep = ""))
-cat(paste("staged_version: \"", staged_version, "\"\n", sep = ""))
+cat(paste("sd_version: \"", sd_version, "\"\n", sep = ""))
 cat(paste("git_ref: \"", git_ref, "\"\n", sep = ""))
 cat(paste("threads: \"", threads, "\"\n", sep = ""))
 cat(paste("check: \"", check, "\"\n", sep = ""))
@@ -51,20 +51,30 @@ options(
   staged.dependencies.token_mapping = split_to_map(token_mapping)
 )
 
-
+# Install dependencies from renv
 if (file.exists("renv.lock")) {
   renv::restore()
-} else {
-  remotes::install_deps(dependencies = TRUE, upgrade = "never", Ncpus = threads)
 }
+
+# Get staged dependencies graph and install dependencies
 if (file.exists("staged_dependencies.yaml")) {
-  cat("Install Staged Dependencies\n\n")
+  install_sd <- FALSE
   if (!require("staged.dependencies")) {
+    install_sd <- TRUE
+  }
+  if (require("staged.dependencies")) {
+    if (paste0("v", packageVersion("staged.dependencies")) != sd_version) {
+      install_sd <- TRUE
+    }
+  }
+  if (install_sd) {
+    cat("Installing Staged Dependencies\n\n")
     remotes::install_github(
       "openpharma/staged.dependencies",
-      ref = staged_version,
+      ref = sd_version,
       Ncpus = threads,
-      upgrade = "never"
+      upgrade = "never",
+      force = TRUE
     )
   }
 
@@ -72,12 +82,13 @@ if (file.exists("staged_dependencies.yaml")) {
     "\nCalculating Staged Dependency Table for ref: ", git_ref, "...\n\n"
   ))
 
-  if (git_ref != "" && !startsWith(git_ref, "refs/pull") && !startsWith(git_ref, "refs/head")) {
+  if (git_ref != "" &&
+    !startsWith(git_ref, "refs/pull") &&
+    !startsWith(git_ref, "refs/head")) {
     x <- staged.dependencies::dependency_table(ref = git_ref)
   } else {
     x <- staged.dependencies::dependency_table()
   }
-
 
   print(x, width = 120)
   cat("\n\n")
@@ -90,6 +101,10 @@ if (file.exists("staged_dependencies.yaml")) {
   staged.dependencies::install_deps(
     dep_structure = x,
     install_project = FALSE,
-    verbose = TRUE
+    verbose = 1,
+    install_external_deps = TRUE,
+    dependencies = TRUE,
+    upgrade = "never",
+    Ncpus = threads
   )
 }
