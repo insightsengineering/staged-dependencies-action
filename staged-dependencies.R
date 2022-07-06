@@ -51,72 +51,43 @@ options(
   staged.dependencies.token_mapping = split_to_map(token_mapping)
 )
 
-# Install and run staged.dependencies if config file exists
-if (file.exists("staged_dependencies.yaml")) {
-  cat("Install Staged Dependencies\n\n")
-  if (!require("staged.dependencies")) {
-    remotes::install_github(
-      "openpharma/staged.dependencies",
-      ref = sd_version,
-      Ncpus = threads,
-      upgrade = "never"
-    )
-  }
-
-  # Read the DESCRIPTION file
-  pkg_description <- desc::desc()
-
-  # Get upstream repo names from staged.dependencies config
-  upstream_repos <- names(
-    staged.dependencies:::get_yaml_deps_info(".")$upstream_repos
-  )
-
-  if (pkg_description$has_fields("Remotes")) {
-    # Create backup of original DESCRIPTION file
-    file.copy("DESCRIPTION", "DESCRIPTION.sdaction")
-    # If there are remote dependencies that are also
-    # specified in the staged.dependencies configuration,
-    # then remove those from the DESCRIPTION file, temporarily
-    remote_deps <- pkg_description$get_remotes()
-    # Remove versions from remotes
-    remote_deps_sans_version <- gsub("@.*$", "", remote_deps)
-    # Get setdiff of deps in SD configuration
-    # and the Remotes field in DESCRIPTION file
-    filtered_remotes <- setdiff(remote_deps_sans_version, upstream_repos)
-    # Restore versions for the Remotes field
-    if (length(filtered_remotes) > 0) {
-      remotes_to_install <- c()
-      for (remote in filtered_remotes) {
-        remotes_to_install <- append(
-          remotes_to_install,
-          remote_deps[grep(remote, remote_deps, ignore.case = TRUE)]
-        )
-      }
-      # Set cleaned up Remotes field and overwrite DESCRIPTION file
-      pkg_description$set_remotes(remotes_to_install)
-      pkg_description$write()
-    }
-  }
-}
-
-# Install dependencies from renv or via remotes::install_deps
+# Install dependencies from renv
 if (file.exists("renv.lock")) {
   renv::restore()
-} else {
-  remotes::install_deps(dependencies = TRUE, upgrade = "never", Ncpus = threads)
 }
 
 # Get staged dependencies graph and install dependencies
 if (file.exists("staged_dependencies.yaml")) {
+  install_sd <- FALSE
+  if (!require("staged.dependencies")) {
+    install_sd <- TRUE
+  } else if (packageVersion("staged.dependencies") != sd_version) {
+    install_sd <- TRUE
+  }
+  if (install_sd) {
+    cat("Installing Staged Dependencies\n\n")
+    remotes::install_github(
+      "openpharma/staged.dependencies",
+      ref = sd_version,
+      Ncpus = threads,
+      upgrade = "never",
+      force = TRUE
+    )
+  }
+
   cat(paste(
     "\nCalculating Staged Dependency Table for ref: ", git_ref, "...\n\n"
   ))
 
-  if (git_ref != "" && !startsWith(git_ref, "refs/pull")
-    && !startsWith(git_ref, "refs/head")) {
-    x <- staged.dependencies::dependency_table(ref = git_ref)
+  if (git_ref != "" &&
+    !startsWith(git_ref, "refs/pull") &&
+    !startsWith(git_ref, "refs/head")) {
+    x <- staged.dependencies::dependency_table(
+      ref = git_ref,
+      direction = "upstream"
+    )
   } else {
-    x <- staged.dependencies::dependency_table()
+    x <- staged.dependencies::dependency_table(direction = "upstream")
   }
 
   print(x, width = 120)
@@ -130,7 +101,11 @@ if (file.exists("staged_dependencies.yaml")) {
   staged.dependencies::install_deps(
     dep_structure = x,
     install_project = FALSE,
-    verbose = TRUE
+    verbose = 1,
+    install_external_deps = TRUE,
+    dependencies = TRUE,
+    upgrade = "never",
+    Ncpus = threads
   )
 }
 
