@@ -63,7 +63,7 @@ if (file.exists("staged_dependencies.yaml")) {
     install_sd <- TRUE
   }
   if (require("staged.dependencies")) {
-    if (packageVersion("staged.dependencies") != sd_version) {
+    if (paste0("v", packageVersion("staged.dependencies")) != sd_version) {
       install_sd <- TRUE
     }
   }
