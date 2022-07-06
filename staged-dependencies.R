@@ -72,9 +72,11 @@ if (file.exists("staged_dependencies.yaml")) {
   )
 
   if (pkg_description$has_fields("Remotes")) {
+    # Create backup of original DESCRIPTION file
+    file.copy("DESCRIPTION", "DESCRIPTION.sdaction")
     # If there are remote dependencies that are also
     # specified in the staged.dependencies configuration,
-    # then remove those from the DESCRIPTION file
+    # then remove those from the DESCRIPTION file, temporarily
     remote_deps <- pkg_description$get_remotes()
     # Remove versions from remotes
     remote_deps_sans_version <- gsub("@.*$", "", remote_deps)
@@ -90,7 +92,7 @@ if (file.exists("staged_dependencies.yaml")) {
           remote_deps[grep(remote, remote_deps, ignore.case = TRUE)]
         )
       }
-      # Set cleaned up Remotes field
+      # Set cleaned up Remotes field and overwrite DESCRIPTION file
       pkg_description$set_remotes(remotes_to_install)
       pkg_description$write()
     }
@@ -130,4 +132,9 @@ if (file.exists("staged_dependencies.yaml")) {
     install_project = FALSE,
     verbose = TRUE
   )
+}
+
+# Restore original DESCRIPTION file from backup
+if (file.exists("DESCRIPTION.sdaction")) {
+  file.copy("DESCRIPTION.sdaction", "DESCRIPTION", overwrite = TRUE)
 }
