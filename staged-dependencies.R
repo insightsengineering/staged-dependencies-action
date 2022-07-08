@@ -74,7 +74,8 @@ if (file.exists("staged_dependencies.yaml")) {
       ref = sd_version,
       Ncpus = threads,
       upgrade = "never",
-      force = TRUE
+      force = TRUE,
+      quiet = TRUE
     )
   }
 
@@ -104,9 +105,15 @@ if (file.exists("staged_dependencies.yaml")) {
     verbose = 1,
     install_external_deps = TRUE,
     upgrade = "never",
-    Ncpus = threads
+    Ncpus = threads,
+    quiet = TRUE
   )
 }
 
 # Install any remaining dependencies
-remotes::install_deps(dependencies = TRUE, upgrade = "never", Ncpus = threads)
+remotes::install_deps(
+  dependencies = TRUE,
+  upgrade = "never",
+  Ncpus = threads,
+  quiet = TRUE
+)
