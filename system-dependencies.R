@@ -21,6 +21,7 @@ if (v_os_info[["NAME"]] == "Ubuntu") {
     path = repo_path
   )
   sys_pgks <- gsub("^apt-get install -y ", "", sys_deps_for_pkg)
+  sys_pgks <- c("libgit2", sys_pgks) # For installing staged.dependencies
   has_pkgs <- vapply(
     sys_pgks,
     function(pkg) {
