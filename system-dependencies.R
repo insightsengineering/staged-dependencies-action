@@ -13,11 +13,11 @@ os_info <- read.csv("/etc/os-release", sep = "=", header = FALSE)
 v_os_info <- setNames(os_info$V2, os_info$V1)
 
 if (v_os_info[["NAME"]] == "Ubuntu") {
-  ubuntu_version <- v_os_info[["VERSION_ID"]]
+  ubuntu_version <- as.character(v_os_info[["VERSION_ID"]])
   cat(paste("Ubuntu version: \"", ubuntu_version, "\"\n", sep = ""))
   sys_deps_for_pkg <- remotes::system_requirements(
     os = "ubuntu",
-    os_release = c(ubuntu_version),
+    os_release = ubuntu_version,
     path = repo_path
   )
   sys_pgks <- gsub("^apt-get install -y ", "", sys_deps_for_pkg)
