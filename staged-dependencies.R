@@ -7,6 +7,11 @@ split_to_map <- function(args) {
   return(content)
 }
 
+git_user_name <- Sys.getenv("SD_GIT_USER_NAME", "github-actions[bot]")
+git_user_email <- Sys.getenv(
+  "SD_GIT_USER_EMAIL",
+  "27856297+dependabot-preview[bot]@users.noreply.github.com"
+)
 repo_path <- Sys.getenv("SD_REPO_PATH", ".")
 sd_version <- Sys.getenv("SD_STAGED_DEPENDENCIES_VERSION", "v0.2.7")
 git_ref <- Sys.getenv("SD_GIT_REF")
@@ -96,6 +101,13 @@ if (file.exists("staged_dependencies.yaml")) {
       quiet = TRUE
     )
   }
+
+  # git signature setup
+  git2r::config(
+    git2r::repository("."),
+    user.name = git_user_email,
+    user.email = git_user_email
+  )
 
   cat(paste(
     "\nCalculating Staged Dependency Table for ref: ", git_ref, "...\n\n"

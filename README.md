@@ -77,8 +77,6 @@ The following options are available are available for this action:
 | **Option** | **Default Value** | **Notes** |
 | --- | --- | --- |
 | **run-system-dependencies** | `false` | Check for and install system dependencies |
-| **git-user-name** | `github-actions[bot]` | Git user.name configuration for fetching remote staged dependencies |
-| **git-user-email** | `27856297+dependabot-preview[bot]@users.noreply.github.com` | Git user.email configuration for fetching remote staged dependencies |
 
 This action allows you to pass the following `ENV` variables to be able to trigger different functionality.
 
@@ -92,6 +90,8 @@ This action allows you to pass the following `ENV` variables to be able to trigg
 | **SD_TOKEN_MAPPING** | `https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT` | Token mapping that is used in `staged.dependencies.token_mapping` delimited by comma. Note that you will need to set these tokens with their respective values as environment variables while using this action |
 | **SD_ENABLE_CHECK** | `true` | Run `check_yamls_consistent` before installation of dependencies |
 | **SD_GIT_REF** | `${{ github.ref }}` | Git reference |
+| **SD_GIT_USER_NAME** | `github-actions[bot]` | Git user.name configuration for fetching remote staged dependencies |
+| **SD_GIT_USER_EMAIL** | `27856297+dependabot-preview[bot]@users.noreply.github.com` | Git user.email configuration for fetching remote staged dependencies |
 
 [staged.dependencies]: https://github.com/openpharma/staged.dependencies
 [structure-of-staged_dependenciesyaml-file]: https://github.com/openpharma/staged.dependencies#structure-of-staged_dependenciesyaml-file
