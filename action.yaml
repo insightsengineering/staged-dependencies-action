@@ -19,13 +19,6 @@ branding:
 runs:
   using: "composite"
   steps:
-    - name: Install dependencies
-      run: |
-        options(repos = c(CRAN = "https://cloud.r-project.org/"))
-        ncores <- parallel::detectCores(all.tests = FALSE, logical = TRUE)
-        if (!require("remotes")) install.packages("remotes", upgrade = "never", Ncpus = ncores)
-      shell: Rscript {0}
-
     - name: Run system dependencies
       run: |
         if [ "${{ inputs.run-system-dependencies }}" = "true" ]

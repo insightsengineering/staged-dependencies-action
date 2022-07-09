@@ -7,10 +7,18 @@ cat("Running system dependencies installer\n")
 cat(paste("repo_path: \"", repo_path, "\"\n", sep = ""))
 cat("==================================\n")
 
+# Install the remotes package
+if (!require("remotes")) {
+  install.packages(
+    "remotes",
+    upgrade = "never",
+    repos = "https://cloud.r-project.org/"
+  )
+}
 
 os_info <- read.csv("/etc/os-release", sep = "=", header = FALSE)
-
 v_os_info <- setNames(os_info$V2, os_info$V1)
+
 
 if (v_os_info[["NAME"]] == "Ubuntu") {
   ubuntu_version <- as.character(v_os_info[["VERSION_ID"]])

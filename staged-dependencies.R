@@ -47,6 +47,16 @@ if (threads == "auto") {
   cat(paste("Number of cores detected:", threads, "\n\n"))
 }
 
+# Install the remotes package
+if (!require("remotes")) {
+  install.packages(
+    "remotes",
+    upgrade = "never",
+    repos = "https://cloud.r-project.org/",
+    Ncpus = threads
+  )
+}
+
 options(
   staged.dependencies.token_mapping = split_to_map(token_mapping)
 )
