@@ -15,7 +15,8 @@ v_os_info <- setNames(os_info$V2, os_info$V1)
 if (v_os_info[["NAME"]] == "Ubuntu") {
   ubuntu_version <- v_os_info[["VERSION_ID"]]
   sys_deps_for_pkg <- remotes::system_requirements(
-    "ubuntu", ubuntu_version,
+    os = "ubuntu",
+    os_release = ubuntu_version,
     path = repo_path
   )
   sys_pgks <- gsub("^apt-get install -y ", "", sys_deps_for_pkg)
