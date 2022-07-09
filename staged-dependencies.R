@@ -53,6 +53,14 @@ options(
 
 # Install dependencies from renv
 if (file.exists("renv.lock")) {
+  if (!require(renv)) {
+    install.packages(
+      "renv",
+      upgrade = "never",
+      Ncpus = threads,
+      quiet = TRUE
+    )
+  }
   renv::restore()
 }
 
