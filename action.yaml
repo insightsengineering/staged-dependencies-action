@@ -53,3 +53,9 @@ runs:
       shell: bash
       env:
         SD_GIT_REF: ${{ github.ref }}
+
+    - name: Unset git user.name and user.email configurations
+      run: |
+        git config --global --unset user.name
+        git config --global --unset user.email
+      shell: bash

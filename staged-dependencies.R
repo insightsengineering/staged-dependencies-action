@@ -119,9 +119,11 @@ if (file.exists("staged_dependencies.yaml")) {
 }
 
 # Install any remaining dependencies
-remotes::install_deps(
-  dependencies = TRUE,
-  upgrade = "never",
-  Ncpus = threads,
-  quiet = TRUE
-)
+if (!file.exists("renv.lock")) {
+  remotes::install_deps(
+    dependencies = TRUE,
+    upgrade = "never",
+    Ncpus = threads,
+    quiet = TRUE
+  )
+}
