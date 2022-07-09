@@ -24,8 +24,8 @@ runs:
         if [ "${{ inputs.run-system-dependencies }}" = "true" ]
         then {
           SUDO_CMD=""
-          [[ "$(whoami)" != "root" ]] && SUDO_CMD="sudo "
-          ${SUDO_CMD}${GITHUB_ACTION_PATH}/system-dependencies.R
+          [[ "$(whoami)" != "root" ]] && SUDO_CMD="sudo"
+          ${SUDO_CMD} ${GITHUB_ACTION_PATH}/system-dependencies.R
         }
         fi
       shell: bash
@@ -33,8 +33,9 @@ runs:
     - name: Run staged dependencies
       run: |
         SUDO_CMD=""
-        [[ "$(whoami)" != "root" ]] && SUDO_CMD="sudo "
-        ${SUDO_CMD}${GITHUB_ACTION_PATH}/staged-dependencies.R
+        [[ "$(whoami)" != "root" ]] && SUDO_CMD="sudo"
+        ${SUDO_CMD} ${GITHUB_ACTION_PATH}/staged-dependencies.R
+        ${SUDO_CMD} chown -R $(whoami):$(id -gn $(whoami)) ${GITHUB_WORKSPACE}
       shell: bash
       env:
         SD_GIT_REF: ${{ github.ref }}
