@@ -34,8 +34,8 @@ if (v_os_info[["NAME"]] == "Ubuntu") {
     sys_pgks,
     function(pkg) {
       system2(
-        "sudo dpkg",
-        c("-l", pkg),
+        "sudo",
+        c("dpkg", "-l", pkg),
         stdout = NULL,
         stderr = NULL
       ) == 0
@@ -43,8 +43,8 @@ if (v_os_info[["NAME"]] == "Ubuntu") {
     logical(1)
   )
   if (any(!has_pkgs)) {
-    system2("sudo apt-get", "update")
-    system2("sudo apt-get", c("install", "-y", sys_pgks[!has_pkgs]))
+    system2("sudo", c("apt-get", "update"))
+    system2("sudo", c("apt-get", "install", "-y", sys_pgks[!has_pkgs]))
   }
 } else {
   cat(paste(
