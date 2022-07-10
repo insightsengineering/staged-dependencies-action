@@ -92,6 +92,7 @@ This action allows you to pass the following `ENV` variables to be able to trigg
 | **SD_GIT_REF** | `${{ github.ref }}` | Git reference |
 | **SD_GIT_USER_NAME** | `github-actions[bot]` | Git user.name configuration for fetching remote staged dependencies |
 | **SD_GIT_USER_EMAIL** | `27856297+dependabot-preview[bot]@users.noreply.github.com` | Git user.email configuration for fetching remote staged dependencies |
+| **SD_RENV_RESTORE** | `true` | Restore dependencies from `renv.lock`, if it exists |
 
 [staged.dependencies]: https://github.com/openpharma/staged.dependencies
 [structure-of-staged_dependenciesyaml-file]: https://github.com/openpharma/staged.dependencies#structure-of-staged_dependenciesyaml-file

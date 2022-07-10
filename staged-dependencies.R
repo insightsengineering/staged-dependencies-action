@@ -26,6 +26,7 @@ token_mapping <- Sys.getenv(
   "https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT"
 )
 check <- Sys.getenv("SD_ENABLE_CHECK", "true")
+renv_restore <- Sys.getenv("SD_RENV_RESTORE", "true")
 
 cat("\n==================================\n")
 cat("Running staged dependencies installer\n")
@@ -37,6 +38,9 @@ cat(paste("check: \"", check, "\"\n", sep = ""))
 cat(paste("cran_repos: \"", cran_repos, "\"\n", sep = ""))
 cat(paste("cran_repos_biomarker: \"", cran_repos_biomarker, "\"\n", sep = ""))
 cat(paste("token_mapping: \"", token_mapping, "\"\n", sep = ""))
+cat(paste("git_user_name: \"", git_user_name, "\"\n", sep = ""))
+cat(paste("git_user_email: \"", git_user_email, "\"\n", sep = ""))
+cat(paste("renv_restore: \"", renv_restore, "\"\n", sep = ""))
 cat("==================================\n")
 
 setwd(repo_path)
@@ -67,7 +71,7 @@ options(
 )
 
 # Install dependencies from renv
-if (file.exists("renv.lock")) {
+if (file.exists("renv.lock") && renv_restore == "true") {
   if (!require(renv)) {
     install.packages(
       "renv",
