@@ -145,7 +145,7 @@ if (file.exists("staged_dependencies.yaml")) {
 }
 
 # Install any remaining dependencies
-if (!file.exists("renv.lock")) {
+if (!file.exists("renv.lock") || renv_restore != "true") {
   remotes::install_deps(
     dependencies = TRUE,
     upgrade = "never",
