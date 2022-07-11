@@ -7,6 +7,11 @@ split_to_map <- function(args) {
   return(content)
 }
 
+git_user_name <- Sys.getenv("SD_GIT_USER_NAME", "github-actions[bot]")
+git_user_email <- Sys.getenv(
+  "SD_GIT_USER_EMAIL",
+  "27856297+dependabot-preview[bot]@users.noreply.github.com"
+)
 repo_path <- Sys.getenv("SD_REPO_PATH", ".")
 sd_version <- Sys.getenv("SD_STAGED_DEPENDENCIES_VERSION", "v0.2.7")
 git_ref <- Sys.getenv("SD_GIT_REF")
@@ -21,6 +26,7 @@ token_mapping <- Sys.getenv(
   "https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT"
 )
 check <- Sys.getenv("SD_ENABLE_CHECK", "true")
+renv_restore <- Sys.getenv("SD_RENV_RESTORE", "true")
 
 cat("\n==================================\n")
 cat("Running staged dependencies installer\n")
@@ -32,6 +38,9 @@ cat(paste("check: \"", check, "\"\n", sep = ""))
 cat(paste("cran_repos: \"", cran_repos, "\"\n", sep = ""))
 cat(paste("cran_repos_biomarker: \"", cran_repos_biomarker, "\"\n", sep = ""))
 cat(paste("token_mapping: \"", token_mapping, "\"\n", sep = ""))
+cat(paste("git_user_name: \"", git_user_name, "\"\n", sep = ""))
+cat(paste("git_user_email: \"", git_user_email, "\"\n", sep = ""))
+cat(paste("renv_restore: \"", renv_restore, "\"\n", sep = ""))
 cat("==================================\n")
 
 setwd(repo_path)
@@ -47,12 +56,22 @@ if (threads == "auto") {
   cat(paste("Number of cores detected:", threads, "\n\n"))
 }
 
+# Install the remotes package
+if (!require("remotes")) {
+  install.packages(
+    "remotes",
+    upgrade = "never",
+    repos = "https://cloud.r-project.org/",
+    Ncpus = threads
+  )
+}
+
 options(
   staged.dependencies.token_mapping = split_to_map(token_mapping)
 )
 
 # Install dependencies from renv
-if (file.exists("renv.lock")) {
+if (file.exists("renv.lock") && renv_restore == "true") {
   if (!require(renv)) {
     install.packages(
       "renv",
@@ -87,6 +106,13 @@ if (file.exists("staged_dependencies.yaml")) {
     )
   }
 
+  # git signature setup
+  git2r::config(
+    git2r::repository("."),
+    user.name = git_user_email,
+    user.email = git_user_email
+  )
+
   cat(paste(
     "\nCalculating Staged Dependency Table for ref: ", git_ref, "...\n\n"
   ))
@@ -119,9 +145,11 @@ if (file.exists("staged_dependencies.yaml")) {
 }
 
 # Install any remaining dependencies
-remotes::install_deps(
-  dependencies = TRUE,
-  upgrade = "never",
-  Ncpus = threads,
-  quiet = TRUE
-)
+if (!file.exists("renv.lock") || renv_restore != "true") {
+  remotes::install_deps(
+    dependencies = TRUE,
+    upgrade = "never",
+    Ncpus = threads,
+    quiet = TRUE
+  )
+}

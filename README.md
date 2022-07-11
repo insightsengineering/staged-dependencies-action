@@ -13,11 +13,9 @@ dependency packages within your development set of packages.
 - [Staged-Dependencies-Action](#staged-dependencies-action)
   - [Table of Contents](#table-of-contents)
   - [How to use](#how-to-use)
-  - [Environment variables](#environment-variables)
-
+  - [Usage Options](#usage-options)
 
 ## How to use
-
 
 To use this GitHub Action you will need to complete the following:
 
@@ -27,7 +25,6 @@ To use this GitHub Action you will need to complete the following:
 4. Commit that file to a new branch
 5. Open up a pull request and observe the action working
 6. Enjoy your more stable, and cleaner codebase
-
 
 ```yml
 ---
@@ -73,9 +70,15 @@ jobs:
         shell: bash
 ```
 
-## Environment variables
+## Usage Options
 
-The staged-dependencies-action allows you to pass the following `ENV` variables to be able to trigger different functionality.
+The following options are available are available for this action:
+
+| **Option** | **Default Value** | **Notes** |
+| --- | --- | --- |
+| **run-system-dependencies** | `false` | Check for and install system dependencies |
+
+This action allows you to pass the following `ENV` variables to be able to trigger different functionality.
 
 | **ENV VAR** | **Default Value** | **Notes** |
 | ----------- | ----------------- | --------- |
@@ -84,10 +87,12 @@ The staged-dependencies-action allows you to pass the following `ENV` variables 
 | **SD_THREADS** | `auto` | Number of threads that is use in `Ncpus` |
 | **SD_CRAN_REPOSITORIES** | `CRAN=https://cloud.r-project.org/` | Map of cran option repos delimited by comma |
 | **SD_ENABLE_BIOMARKER_REPOSITORIES** | `false` | Add `BiocManager::repositories()` to option repos |
-| **SD_TOKEN_MAPPING** | `https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT` | Token mapping that is used in `staged.dependencies.token_mapping` delimited by comma |
+| **SD_TOKEN_MAPPING** | `https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT` | Token mapping that is used in `staged.dependencies.token_mapping` delimited by comma. Note that you will need to set these tokens with their respective values as environment variables while using this action |
 | **SD_ENABLE_CHECK** | `true` | Run `check_yamls_consistent` before installation of dependencies |
 | **SD_GIT_REF** | `${{ github.ref }}` | Git reference |
-
+| **SD_GIT_USER_NAME** | `github-actions[bot]` | Git user.name configuration for fetching remote staged dependencies |
+| **SD_GIT_USER_EMAIL** | `27856297+dependabot-preview[bot]@users.noreply.github.com` | Git user.email configuration for fetching remote staged dependencies |
+| **SD_RENV_RESTORE** | `true` | Restore dependencies from `renv.lock`, if it exists |
 
 [staged.dependencies]: https://github.com/openpharma/staged.dependencies
 [structure-of-staged_dependenciesyaml-file]: https://github.com/openpharma/staged.dependencies#structure-of-staged_dependenciesyaml-file
