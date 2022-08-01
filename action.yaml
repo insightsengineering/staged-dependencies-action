@@ -28,8 +28,7 @@ runs:
       if: ${{ inputs.use-cache == 'true' }}
       uses: actions/cache@v3
       with:
-        path: |
-          ~/.staged.dependencies
+        path: /github/home/.staged.dependencies/packages_cache
         key: staged-deps-cache
 
     - name: Run staged dependencies
