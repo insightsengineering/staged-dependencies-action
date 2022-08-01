@@ -30,7 +30,7 @@ runs:
       with:
         path: |
           ~/.staged.dependencies
-        key: staged-deps-${{ hashFiles('staged_dependencies.yaml') }}
+        key: staged-deps-cache
 
     - name: Run staged dependencies
       run: ${GITHUB_ACTION_PATH}/staged-dependencies.R
