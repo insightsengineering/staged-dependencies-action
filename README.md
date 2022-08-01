@@ -77,6 +77,7 @@ The following options are available are available for this action:
 | **Option** | **Default Value** | **Notes** |
 | --- | --- | --- |
 | **run-system-dependencies** | `false` | Check for and install system dependencies |
+| **use-cache** | `true` | Use GitHub's caching mechanism to cache staged dependencies |
 
 This action allows you to pass the following `ENV` variables to be able to trigger different functionality.
 

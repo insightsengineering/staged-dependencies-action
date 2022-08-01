@@ -5,14 +5,10 @@ inputs:
     description: Check for and install system dependencies
     required: false
     default: false
-  git-user-name:
-    description: Git user.name configuration for fetching remote staged dependencies
+  use-cache:
+    description: Use GitHub's caching mechanism to cache staged dependencies
     required: false
-    default: github-actions[bot]
-  git-user-email:
-    description: Git user.email configuration for fetching remote staged dependencies
-    required: false
-    default: 27856297+dependabot-preview[bot]@users.noreply.github.com
+    default: true
 branding:
   icon: 'arrow-down'
   color: 'blue'
@@ -27,6 +23,21 @@ runs:
         }
         fi
       shell: bash
+
+    - name: Check if staged.deps config exists
+      if: ${{ inputs.use-cache == 'true' }}
+      id: check_staged_deps
+      uses: andstor/file-existence-action@v1
+      with:
+        files: staged_dependencies.yaml
+
+    - name: Restore cache
+      if: ${{ inputs.use-cache == 'true' && steps.check_staged_deps.outputs.files_exists == 'true' }}
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.staged.dependencies
+        key: staged-deps-${{ hashFiles('staged_dependencies.yaml') }}
 
     - name: Run staged dependencies
       run: ${GITHUB_ACTION_PATH}/staged-dependencies.R
