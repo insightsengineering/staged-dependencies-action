@@ -24,15 +24,8 @@ runs:
         fi
       shell: bash
 
-    - name: Check if staged.deps config exists
-      if: ${{ inputs.use-cache == 'true' }}
-      id: check_staged_deps
-      uses: andstor/file-existence-action@v1
-      with:
-        files: staged_dependencies.yaml
-
     - name: Restore cache
-      if: ${{ inputs.use-cache == 'true' && steps.check_staged_deps.outputs.files_exists == 'true' }}
+      if: ${{ inputs.use-cache == 'true' }}
       uses: actions/cache@v3
       with:
         path: |
