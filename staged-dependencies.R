@@ -47,7 +47,7 @@ setwd(repo_path)
 
 repos <- split_to_map(cran_repos)
 if (enable_bioc_repos == "true") {
-  options(repos = c(split_to_map(cran_repos), BiocManager::repositories()))
+  repos <- c(split_to_map(cran_repos), BiocManager::repositories())
 }
 
 if (threads == "auto") {
@@ -65,6 +65,7 @@ if (!require("remotes", quietly = TRUE)) {
 }
 
 options(
+  repos = repos,
   staged.dependencies.token_mapping = split_to_map(token_mapping)
 )
 
