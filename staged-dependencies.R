@@ -20,7 +20,7 @@ cran_repos <- Sys.getenv(
   "SD_CRAN_REPOSITORIES",
   "CRAN=https://cloud.r-project.org/"
 )
-cran_repos_biomarker <- Sys.getenv("SD_ENABLE_BIOMARKER_REPOSITORIES", "false")
+enable_bioc_repos <- Sys.getenv("SD_ENABLE_BIOC_REPOSITORIES", "false")
 token_mapping <- Sys.getenv(
   "SD_TOKEN_MAPPING",
   "https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT"
@@ -36,7 +36,7 @@ cat(paste("git_ref: \"", git_ref, "\"\n", sep = ""))
 cat(paste("threads: \"", threads, "\"\n", sep = ""))
 cat(paste("check: \"", check, "\"\n", sep = ""))
 cat(paste("cran_repos: \"", cran_repos, "\"\n", sep = ""))
-cat(paste("cran_repos_biomarker: \"", cran_repos_biomarker, "\"\n", sep = ""))
+cat(paste("enable_bioc_repos: \"", enable_bioc_repos, "\"\n", sep = ""))
 cat(paste("token_mapping: \"", token_mapping, "\"\n", sep = ""))
 cat(paste("git_user_name: \"", git_user_name, "\"\n", sep = ""))
 cat(paste("git_user_email: \"", git_user_email, "\"\n", sep = ""))
@@ -45,10 +45,9 @@ cat("==================================\n")
 
 setwd(repo_path)
 
-if (cran_repos_biomarker == "true") {
+repos <- split_to_map(cran_repos)
+if (enable_bioc_repos == "true") {
   options(repos = c(split_to_map(cran_repos), BiocManager::repositories()))
-} else {
-  options(repos = split_to_map(cran_repos))
 }
 
 if (threads == "auto") {
@@ -57,11 +56,10 @@ if (threads == "auto") {
 }
 
 # Install the remotes package
-if (!require("remotes")) {
+if (!require("remotes", quietly = TRUE)) {
   install.packages(
     "remotes",
     upgrade = "never",
-    repos = "https://cloud.r-project.org/",
     Ncpus = threads
   )
 }
@@ -72,7 +70,7 @@ options(
 
 # Install dependencies from renv
 if (file.exists("renv.lock") && renv_restore == "true") {
-  if (!require(renv)) {
+  if (!require("renv", quietly = TRUE)) {
     install.packages(
       "renv",
       upgrade = "never",
@@ -86,10 +84,10 @@ if (file.exists("renv.lock") && renv_restore == "true") {
 # Get staged dependencies graph and install dependencies
 if (file.exists("staged_dependencies.yaml")) {
   install_sd <- FALSE
-  if (!require("staged.dependencies")) {
+  if (!require("staged.dependencies", quietly = TRUE)) {
     install_sd <- TRUE
   }
-  if (require("staged.dependencies")) {
+  if (require("staged.dependencies", quietly = TRUE)) {
     if (paste0("v", packageVersion("staged.dependencies")) != sd_version) {
       install_sd <- TRUE
     }

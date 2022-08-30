@@ -60,6 +60,6 @@ jobs:
           SD_THREADS: "2"
           SD_CRAN_REPOSITORIES: "CRAN=https://cloud.r-project.org/"
           SD_TOKEN_MAPPING: "https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT"
-          SD_ENABLE_BIOMARKER_REPOSITORIES: "true"
+          SD_ENABLE_BIOC_REPOSITORIES: "true"
           SD_ENABLE_CHECK: "false"
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
