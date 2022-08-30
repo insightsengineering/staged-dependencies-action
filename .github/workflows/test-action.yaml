@@ -35,12 +35,6 @@ jobs:
         env:
           SD_REPO_PATH: "stageddeps.elecinfra"
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Test with system requirements installation
-        uses: ./
-        env:
-          SD_REPO_PATH: "stageddeps.elecinfra"
-          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         with:
           run-system-dependencies: true
 
