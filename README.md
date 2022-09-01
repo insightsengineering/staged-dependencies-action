@@ -114,11 +114,11 @@ The following options are available are available for this action:
 
 * `version`:
 
-  _Description_: Version of {staged.dependencies} to use. This action is compatilble with `>=0.2.2`
+  _Description_: Version of {staged.dependencies} to use. This action is compatilble with `>=v0.2.2`
 
   _Required_: `false`
 
-  _Default_: `0.2.7`
+  _Default_: `v0.2.7`
 
 * `threads`:
 
