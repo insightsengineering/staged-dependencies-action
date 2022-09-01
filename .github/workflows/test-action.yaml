@@ -33,10 +33,10 @@ jobs:
       - name: Test staged dependencies for elecinfra
         uses: ./
         env:
-          SD_REPO_PATH: "stageddeps.elecinfra"
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         with:
           run-system-dependencies: true
+          path: stageddeps.elecinfra
 
       - name: Install BiocManager
         run: |
@@ -53,4 +53,5 @@ jobs:
           version: v0.2.7
           enable-bioc-repos: true
           enable-check: false
+        env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
