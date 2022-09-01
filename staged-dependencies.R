@@ -25,7 +25,7 @@ token_mapping <- Sys.getenv(
   "SD_TOKEN_MAPPING",
   "https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT"
 )
-check <- Sys.getenv("SD_ENABLE_CHECK", "true")
+check <- Sys.getenv("SD_ENABLE_CHECK", "false")
 renv_restore <- Sys.getenv("SD_RENV_RESTORE", "true")
 
 cat("\n==================================\n")

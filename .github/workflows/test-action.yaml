@@ -22,10 +22,10 @@ jobs:
         tag: ["4.2.1", "4.1.3", "4.0.3"]
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Checkout test repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: "openpharma/stageddeps.elecinfra"
           path: "stageddeps.elecinfra"
@@ -48,12 +48,9 @@ jobs:
 
       - name: Test staged dependencies with more parameters
         uses: ./
-        env:
-          SD_REPO_PATH: "stageddeps.elecinfra"
-          SD_STAGED_DEPENDENCIES_VERSION: "v0.2.7"
-          SD_THREADS: "2"
-          SD_CRAN_REPOSITORIES: "CRAN=https://cloud.r-project.org/"
-          SD_TOKEN_MAPPING: "https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT"
-          SD_ENABLE_BIOC_REPOSITORIES: "true"
-          SD_ENABLE_CHECK: "false"
+        with:
+          path: stageddeps.elecinfra
+          version: v0.2.7
+          enable-bioc-repos: true
+          enable-check: false
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
