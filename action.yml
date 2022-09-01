@@ -1,0 +1,87 @@
+name: "Staged dependencies action"
+description: "Github Action to install R package and system dependencies, based on the staged.dependencies R package."
+inputs:
+  run-system-dependencies:
+    description: Check for and install system dependencies
+    required: false
+    default: false
+  git-user-name:
+    description: Git user.name configuration for fetching remote staged dependencies
+    required: false
+    default: github-actions[bot]
+  git-user-email:
+    description: Git user.email configuration for fetching remote staged dependencies
+    required: false
+    default: 27856297+dependabot-preview[bot]@users.noreply.github.com
+  path:
+    description: Path to the R package
+    required: false
+    default: "."
+  version:
+    description: Version of {staged.dependencies} to use. This action is compatilble with `>=v0.2.2`
+    required: false
+    default: "v0.2.7"
+  threads:
+    description: Number of threads to use. Set to 'auto' to use max available threads
+    required: false
+    default: auto
+  cran-repos:
+    description: Map of CRAN repositories delimited by comma
+    required: false
+    default: CRAN=https://cloud.r-project.org
+  enable-bioc-repos:
+    description: Add `BiocManager::repositories()` to option repos
+    required: false
+    default: false
+  token-mapping:
+    description: >
+      Token mapping that is used in `staged.dependencies.token_mapping` delimited by comma.
+      Note that you will need to set these tokens with their respective values
+      as environment variables while using this action.
+    required: false
+    default: https://github.com=GITHUB_PAT,https://gitlab.com=GITLAB_PAT
+  enable-check:
+    description: Run `check_yamls_consistent` before installation of dependencies
+    required: false
+    default: false
+  git-ref:
+    description: Git reference to use as a reference stage for installing dependencies
+    required: false
+    default: ${{ github.ref }}
+  renv-restore:
+    description: Restore dependencies from `renv.lock`, if it exists
+    required: false
+    default: true
+
+branding:
+  icon: 'arrow-down'
+  color: 'blue'
+runs:
+  using: "composite"
+  steps:
+    - name: Run system dependencies
+      run: |
+        if [ "${{ inputs.run-system-dependencies }}" == "true" ]
+        then {
+          ${GITHUB_ACTION_PATH}/system-dependencies.R
+        }
+        fi
+      shell: bash
+      env:
+        SD_REPO_PATH: "${{ inputs.path }}"
+
+    - name: Run staged dependencies
+      run: ${GITHUB_ACTION_PATH}/staged-dependencies.R
+      shell: bash
+      env:
+        SD_GIT_USER_NAME: "${{ inputs.git-user-name }}"
+        SD_GIT_USER_EMAIL: "${{ inputs.git-user-email }}"
+        SD_REPO_PATH: "${{ inputs.path }}"
+        SD_STAGED_DEPENDENCIES_VERSION: "${{ inputs.version }}"
+        SD_THREADS: "${{ inputs.threads }}"
+        SD_CRAN_REPOSITORIES: "${{ inputs.cran-repos }}"
+        SD_ENABLE_BIOC_REPOSITORIES: "${{ inputs.enable-bioc-repos }}"
+        SD_TOKEN_MAPPING: "${{ inputs.token-mapping }}"
+        SD_ENABLE_CHECK: "${{ inputs.enable-check }}"
+        SD_RENV_RESTORE: "${{ inputs.renv-restore }}"
+        SD_GIT_REF: "${{ inputs.git-ref }}"
