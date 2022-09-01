@@ -1,4 +1,4 @@
-# Staged-Dependencies-Action
+# Staged Dependencies Action
 
 Github Action to install R package and system dependencies, based on the [`{staged.dependencies}`](https://github.com/openpharma/staged.dependencies) R package.
 
