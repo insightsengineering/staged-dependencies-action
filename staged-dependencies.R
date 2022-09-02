@@ -16,6 +16,7 @@ repo_path <- Sys.getenv("SD_REPO_PATH", ".")
 sd_version <- Sys.getenv("SD_STAGED_DEPENDENCIES_VERSION", "v0.2.7")
 git_ref <- Sys.getenv("SD_GIT_REF")
 threads <- Sys.getenv("SD_THREADS", "auto")
+
 cran_repos <- Sys.getenv(
   "SD_CRAN_REPOSITORIES",
   "CRAN=https://cloud.r-project.org/"
@@ -27,6 +28,8 @@ token_mapping <- Sys.getenv(
 )
 check <- Sys.getenv("SD_ENABLE_CHECK", "false")
 renv_restore <- Sys.getenv("SD_RENV_RESTORE", "true")
+sd_quiet <- isTRUE(as.logical(Sys.getenv("SD_QUIET", "true")))
+
 
 cat("\n==================================\n")
 cat("Running staged dependencies installer\n")
@@ -41,6 +44,7 @@ cat(paste("token_mapping: \"", token_mapping, "\"\n", sep = ""))
 cat(paste("git_user_name: \"", git_user_name, "\"\n", sep = ""))
 cat(paste("git_user_email: \"", git_user_email, "\"\n", sep = ""))
 cat(paste("renv_restore: \"", renv_restore, "\"\n", sep = ""))
+cat(paste("sd_quiet: \"", sd_quiet, "\"\n", sep = ""))
 cat("==================================\n")
 
 setwd(repo_path)
@@ -56,7 +60,7 @@ if (threads == "auto") {
 }
 
 # Install the remotes package
-if (!require("remotes", quietly = TRUE)) {
+if (!require("remotes", quietly = sd_quiet)) {
   install.packages(
     "remotes",
     upgrade = "never",
@@ -71,12 +75,12 @@ options(
 
 # Install dependencies from renv
 if (file.exists("renv.lock") && renv_restore == "true") {
-  if (!require("renv", quietly = TRUE)) {
+  if (!require("renv", quietly = sd_quiet)) {
     install.packages(
       "renv",
       upgrade = "never",
       Ncpus = threads,
-      quiet = TRUE
+      quiet = sd_quiet
     )
   }
   renv::restore()
@@ -85,10 +89,10 @@ if (file.exists("renv.lock") && renv_restore == "true") {
 # Get staged dependencies graph and install dependencies
 if (file.exists("staged_dependencies.yaml")) {
   install_sd <- FALSE
-  if (!require("staged.dependencies", quietly = TRUE)) {
+  if (!require("staged.dependencies", quietly = sd_quiet)) {
     install_sd <- TRUE
   }
-  if (require("staged.dependencies", quietly = TRUE)) {
+  if (require("staged.dependencies", quietly = sd_quiet)) {
     if (paste0("v", packageVersion("staged.dependencies")) != sd_version) {
       install_sd <- TRUE
     }
@@ -101,7 +105,7 @@ if (file.exists("staged_dependencies.yaml")) {
       Ncpus = threads,
       upgrade = "never",
       force = TRUE,
-      quiet = TRUE
+      quiet = sd_quiet
     )
   }
 
@@ -139,7 +143,7 @@ if (file.exists("staged_dependencies.yaml")) {
     install_external_deps = TRUE,
     upgrade = "never",
     Ncpus = threads,
-    quiet = TRUE
+    quiet = sd_quiet
   )
 }
 
@@ -149,6 +153,6 @@ if (!file.exists("renv.lock") || renv_restore != "true") {
     dependencies = TRUE,
     upgrade = "never",
     Ncpus = threads,
-    quiet = TRUE
+    quiet = sd_quiet
   )
 }
