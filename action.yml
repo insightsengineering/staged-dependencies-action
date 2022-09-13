@@ -52,6 +52,10 @@ inputs:
     description: Restore dependencies from `renv.lock`, if it exists
     required: false
     default: true
+  quiet:
+    description: If TRUE, suppress output
+    required: false
+    default: true
 
 branding:
   icon: 'arrow-down'
@@ -85,3 +89,4 @@ runs:
         SD_ENABLE_CHECK: "${{ inputs.enable-check }}"
         SD_RENV_RESTORE: "${{ inputs.renv-restore }}"
         SD_GIT_REF: "${{ inputs.git-ref }}"
+        SD_QUIET: "${{ inputs.quiet }}"

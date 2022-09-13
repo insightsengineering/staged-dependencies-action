@@ -176,6 +176,14 @@ The following options are available are available for this action:
 
   _Default_: `True`
 
+* `quiet`:
+
+  _Description_: If TRUE, suppress output
+
+  _Required_: `false`
+
+  _Default_: `True`
+
 ### Outputs
 
 None
