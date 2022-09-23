@@ -11,6 +11,7 @@ _downstream_ (i.e. those packages which depend on your current repo's package)
 dependency packages within your development set of packages.
 
 An example of the output of the action can be seen below:
+
 ![Screenshot with example output](example.png)
 
 ## Table of Contents
