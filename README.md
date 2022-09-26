@@ -10,6 +10,10 @@ specify a `staged_dependencies.yaml` file containing _upstream_ (i.e. those pack
 _downstream_ (i.e. those packages which depend on your current repo's package)
 dependency packages within your development set of packages.
 
+An example of the output of the action can be seen below:
+
+![Screenshot with example output](example.png)
+
 ## Table of Contents
 
 - [Staged-Dependencies-Action](#staged-dependencies-action)
@@ -57,7 +61,7 @@ jobs:
           run-system-dependencies: true
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Build R package
         run: |
           R CMD build ${{ github.event.repository.name }}
