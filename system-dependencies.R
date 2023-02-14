@@ -17,6 +17,8 @@ if (!require("remotes")) {
 }
 
 os_info <- read.csv("/etc/os-release", sep = "=", header = FALSE)
+print("os_info DEBUG")
+print(os_info)
 v_os_info <- setNames(os_info$V2, os_info$V1)
 
 
