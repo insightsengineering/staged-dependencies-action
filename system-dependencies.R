@@ -15,7 +15,9 @@ if (!require("remotes")) {
   )
 }
 # Upgrade the remotes package to get the latest bugfixes
-remotes::install_github("r-lib/remotes")
+remotes::install_github("r-lib/remotes@main")
+# Load remotes
+library(remotes)
 
 os_info <- read.csv("/etc/os-release", sep = "=", header = FALSE)
 v_os_info <- setNames(os_info$V2, os_info$V1)
