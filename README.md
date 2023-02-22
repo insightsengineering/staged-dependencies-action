@@ -196,6 +196,14 @@ The following options are available are available for this action:
 
     _Default_: `false`
 
+* `direction`:
+
+    _Description_: The direction to use to install dependencies. Choose between 'upstream', 'downstream' and 'all'
+
+    _Required_: `false`
+
+    _Default_: `upstream`
+
 ### Outputs
 
 None

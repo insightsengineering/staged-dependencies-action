@@ -16,6 +16,7 @@ repo_path <- Sys.getenv("SD_REPO_PATH", ".")
 sd_version <- Sys.getenv("SD_STAGED_DEPENDENCIES_VERSION", "v0.2.7")
 git_ref <- Sys.getenv("SD_GIT_REF")
 threads <- Sys.getenv("SD_THREADS", "auto")
+direction <- Sys.getenv("SD_DIRECTION", "upstream")
 
 cran_repos <- Sys.getenv(
   "SD_CRAN_REPOSITORIES",
@@ -46,6 +47,7 @@ cat(paste("git_user_email: \"", git_user_email, "\"\n", sep = ""))
 cat(paste("renv_restore: \"", renv_restore, "\"\n", sep = ""))
 cat(paste("sd_quiet: \"", sd_quiet, "\"\n", sep = ""))
 cat(paste("upgrade_remotes: \"", upgrade_remotes, "\"\n", sep = ""))
+cat(paste("direction: \"", direction, "\"\n", sep = ""))
 cat("==================================\n")
 
 setwd(repo_path)
@@ -131,9 +133,9 @@ if (file.exists("staged_dependencies.yaml")) {
   if (git_ref != "" &&
     !startsWith(git_ref, "refs/pull") &&
     !startsWith(git_ref, "refs/head")) {
-    x <- staged.dependencies::dependency_table(ref = git_ref)
+    x <- staged.dependencies::dependency_table(ref = git_ref, direction = direction)
   } else {
-    x <- staged.dependencies::dependency_table()
+    x <- staged.dependencies::dependency_table(direction = direction)
   }
 
   print(x, width = 120)
