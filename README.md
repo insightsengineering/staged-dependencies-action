@@ -202,7 +202,7 @@ The following options are available are available for this action:
 
     _Required_: `false`
 
-    _Default_: `upstream`
+    _Default_: `all`
 
 ### Outputs
 

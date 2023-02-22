@@ -63,7 +63,7 @@ inputs:
   direction:
     description: The direction to use to install dependencies. Choose between 'upstream', 'downstream' and 'all'
     required: false
-    default: upstream
+    default: all
 
 branding:
   icon: 'arrow-down'
