@@ -17,6 +17,7 @@ sd_version <- Sys.getenv("SD_STAGED_DEPENDENCIES_VERSION", "v0.2.7")
 git_ref <- Sys.getenv("SD_GIT_REF")
 threads <- Sys.getenv("SD_THREADS", "auto")
 direction <- Sys.getenv("SD_DIRECTION", "all")
+if (direction == "") direction <- "all"
 
 cran_repos <- Sys.getenv(
   "SD_CRAN_REPOSITORIES",
