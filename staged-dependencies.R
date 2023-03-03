@@ -73,6 +73,8 @@ if (!require("remotes", quietly = sd_quiet)) {
 }
 
 # Upgrade the remotes package to get the latest bugfixes
+## TODO: Install directly from GitHub repository instead of
+## using remotes. To precent the "Inception" effect
 if (upgrade_remotes == "true") {
   remotes::install_github("r-lib/remotes@main")
   # Reload remotes
