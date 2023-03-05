@@ -64,7 +64,7 @@ if (threads == "auto") {
 }
 
 # Install the remotes package
-if (!require("remotes", quietly = sd_quiet)) {
+if (!require("remotes", quietly = sd_quiet) && upgrade_remotes != "true") {
   install.packages(
     "remotes",
     upgrade = "never",
@@ -73,12 +73,33 @@ if (!require("remotes", quietly = sd_quiet)) {
 }
 
 # Upgrade the remotes package to get the latest bugfixes
-## TODO: Install directly from GitHub repository instead of
-## using remotes. To precent the "Inception" effect
 if (upgrade_remotes == "true") {
-  remotes::install_github("r-lib/remotes@main")
-  # Reload remotes
-  require(remotes)
+  old_wd <- getwd()
+  tmp_dir <- tempdir()
+  setwd(tmp_dir)
+  download.file(
+    url = "https://github.com/r-lib/remotes/archive/refs/heads/main.zip",
+    dest = "remotes.zip"
+  )
+  unzip("remotes.zip")
+  file.rename("remotes-main", "remotes")
+  system2(
+    command = "R",
+    args = c(
+      "CMD", "build",
+      "--no-manual", "--no-build-vignettes", "--force",
+      "remotes"
+    )
+  )
+  system2(
+    command = "R",
+    args = c(
+      "CMD", "INSTALL",
+      "--no-docs",
+      "remotes_*.tar.gz"
+    )
+  )
+  setwd(old_wd)
 }
 
 options(
