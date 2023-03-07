@@ -87,7 +87,6 @@ if (file.exists(os_release_file)) { # linux-base OS
           repos = "https://cloud.r-project.org/"
         )
       }
-      
       # Install the httr package
       if (!require("httr")) {
         install.packages(
@@ -95,18 +94,17 @@ if (file.exists(os_release_file)) { # linux-base OS
           repos = "https://cloud.r-project.org/"
         )
       }
-
       deps <- desc::desc_get_deps(desc_file)
       deps_pkgs <- deps[deps$type != "Suggests", ]$package
-       cat(paste(
+      cat(paste(
         "Dependencies:",
-        paste(deps_pkgs, collapse =", "),
+        paste(deps_pkgs, collapse = ", "),
         "\"\n"
       ))
       sys_pkgs <- unique(unlist(lapply(deps_pkgs, macos_req_for_pkg)))
       cat(paste(
         "Installing sys deps:",
-        paste(sys_pkgs, collapse =", "),
+        paste(sys_pkgs, collapse = ", "),
         "\"\n"
       ))
       if (length(sys_pkgs) > 0) {
