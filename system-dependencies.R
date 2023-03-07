@@ -23,12 +23,10 @@ if (upgrade_remotes == "true") {
   require(remotes)
 }
 
-os_info <- read.csv("/etc/os-release", sep = "=", header = FALSE)
-v_os_info <- setNames(os_info$V2, os_info$V1)
-
 os_release_file <- "/etc/os-release"
 if (file.exists(os_release_file)) { # linux-base OS
-
+  os_info <- read.csv(os_release_file, sep = "=", header = FALSE)
+  v_os_info <- setNames(os_info$V2, os_info$V1)
   if (v_os_info[["NAME"]] == "Ubuntu") {
     ubuntu_version <- as.character(v_os_info[["VERSION_ID"]])
     cat(paste("Ubuntu version: \"", ubuntu_version, "\"\n", sep = ""))
