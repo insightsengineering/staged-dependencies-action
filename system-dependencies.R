@@ -24,7 +24,7 @@ if (upgrade_remotes == "true") {
 }
 
 os_release_file <- "/etc/os-release"
-if (file.exists(os_release_file)) { # linux-base OS
+if (file.exists(os_release_file)) { # linux-based OS
   os_info <- read.csv(os_release_file, sep = "=", header = FALSE)
   v_os_info <- setNames(os_info$V2, os_info$V1)
   if (v_os_info[["NAME"]] == "Ubuntu") {
