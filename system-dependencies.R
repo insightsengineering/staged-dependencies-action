@@ -94,6 +94,13 @@ if (file.exists(os_release_file)) { # linux-based OS
           repos = "https://cloud.r-project.org/"
         )
       }
+      # Install the git2r package
+      if (!require("git2r")) {
+        install.packages(
+          "git2r",
+          repos = "https://cloud.r-project.org/"
+        )
+      }
       deps <- desc::desc_get_deps(desc_file)
       deps_pkgs <- deps[deps$type != "Suggests", ]$package
       cat(paste(
