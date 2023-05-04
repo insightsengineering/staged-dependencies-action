@@ -81,6 +81,7 @@ runs:
       shell: bash
       env:
         SD_REPO_PATH: "${{ inputs.path }}"
+        SD_QUIET: "${{ inputs.quiet }}"
         SD_UPGRADE_REMOTES: "${{ inputs.upgrade-remotes }}"
 
     - name: Run staged dependencies

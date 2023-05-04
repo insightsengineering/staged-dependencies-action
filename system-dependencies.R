@@ -2,10 +2,13 @@
 
 repo_path <- Sys.getenv("SD_REPO_PATH", ".")
 upgrade_remotes <- Sys.getenv("SD_UPGRADE_REMOTES", "")
+sd_quiet <- isTRUE(as.logical(Sys.getenv("SD_QUIET", "true")))
 
 cat("\n==================================\n")
 cat("Running system dependencies installer\n")
 cat(paste("repo_path: \"", repo_path, "\"\n", sep = ""))
+cat(paste("sd_quiet: \"", sd_quiet, "\"\n", sep = ""))
+cat(paste("upgrade_remotes: \"", upgrade_remotes, "\"\n", sep = ""))
 cat("==================================\n")
 
 # Install the remotes package
