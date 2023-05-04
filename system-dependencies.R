@@ -61,6 +61,11 @@ v_os_info <- setNames(os_info$V2, os_info$V1)
 if (v_os_info[["NAME"]] == "Ubuntu") {
   ubuntu_version <- as.character(v_os_info[["VERSION_ID"]])
   cat(paste("Ubuntu version: \"", ubuntu_version, "\"\n", sep = ""))
+  # The following is a workaround until we have a newer
+  # version of remotes that supports Ubuntu 22.04
+  if (ubuntu_version == "22.04") {
+    ubuntu_version <- "20.04"
+  }
   sys_deps_for_pkg <- remotes::system_requirements(
     os = "ubuntu",
     os_release = ubuntu_version,
