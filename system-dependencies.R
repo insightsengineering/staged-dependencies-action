@@ -3,6 +3,9 @@
 repo_path <- Sys.getenv("SD_REPO_PATH", ".")
 upgrade_remotes <- Sys.getenv("SD_UPGRADE_REMOTES", "")
 
+# temporary fix for remotes : 
+Sys.setenv(RSPM_ROOT = "https://packagemanager.posit.co")
+
 cat("\n==================================\n")
 cat("Running system dependencies installer\n")
 cat(paste("repo_path: \"", repo_path, "\"\n", sep = ""))
