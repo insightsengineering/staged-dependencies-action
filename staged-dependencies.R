@@ -63,6 +63,11 @@ if (threads == "auto") {
   cat(paste("Number of cores detected:", threads, "\n\n"))
 }
 
+options(
+  repos = repos,
+  staged.dependencies.token_mapping = split_to_map(token_mapping)
+)
+                                  
 # Install the remotes package
 if (!require("remotes", quietly = sd_quiet) && upgrade_remotes != "true") {
   install.packages(
@@ -106,11 +111,6 @@ if (upgrade_remotes == "true") {
   )
   setwd(old_wd)
 }
-
-options(
-  repos = repos,
-  staged.dependencies.token_mapping = split_to_map(token_mapping)
-)
 
 # Install dependencies from renv
 if (file.exists("renv.lock") && renv_restore == "true") {
