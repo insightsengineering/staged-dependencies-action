@@ -53,7 +53,7 @@ jobs:
       image: rocker/verse:4.1.0
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
