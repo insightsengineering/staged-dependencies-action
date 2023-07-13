@@ -122,7 +122,7 @@ The following options are available are available for this action:
 
   _Required_: `false`
 
-  _Default_: `v0.2.7`
+  _Default_: `v0.3.0`
 
 * `threads`:
 

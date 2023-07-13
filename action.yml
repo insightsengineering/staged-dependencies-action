@@ -20,7 +20,7 @@ inputs:
   version:
     description: Version of {staged.dependencies} to use. This action is compatilble with `>=v0.2.2`
     required: false
-    default: "v0.2.7"
+    default: "v0.3.0"
   threads:
     description: Number of threads to use. Set to 'auto' to use max available threads
     required: false

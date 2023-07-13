@@ -13,7 +13,7 @@ git_user_email <- Sys.getenv(
   "27856297+dependabot-preview[bot]@users.noreply.github.com"
 )
 repo_path <- Sys.getenv("SD_REPO_PATH", ".")
-sd_version <- Sys.getenv("SD_STAGED_DEPENDENCIES_VERSION", "v0.2.7")
+sd_version <- Sys.getenv("SD_STAGED_DEPENDENCIES_VERSION", "v0.3.0")
 git_ref <- Sys.getenv("SD_GIT_REF")
 threads <- Sys.getenv("SD_THREADS", "auto")
 direction <- Sys.getenv("SD_DIRECTION", "all")
