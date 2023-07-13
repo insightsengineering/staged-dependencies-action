@@ -67,7 +67,7 @@ options(
   repos = repos,
   staged.dependencies.token_mapping = split_to_map(token_mapping)
 )
-                                  
+
 # Install the remotes package
 if (!require("remotes", quietly = sd_quiet)) {
   install.packages(
@@ -100,13 +100,12 @@ if (file.exists("renv.lock") && renv_restore == "true") {
 # Get staged dependencies graph and install dependencies
 if (file.exists("staged_dependencies.yaml")) {
   install_sd <- FALSE
-  if (!require("staged.dependencies", quietly = sd_quiet)) {
-    install_sd <- TRUE
-  }
-  if (require("staged.dependencies", quietly = sd_quiet)) {
+  if ("staged.dependencies" %in% installed.packages()[, "Package"]) {
     if (paste0("v", packageVersion("staged.dependencies")) != sd_version) {
       install_sd <- TRUE
     }
+  } else {
+    install_sd <- TRUE
   }
   if (install_sd) {
     cat("Installing Staged Dependencies\n\n")
