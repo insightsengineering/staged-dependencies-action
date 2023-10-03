@@ -182,7 +182,7 @@ The following options are available are available for this action:
 
 * `quiet`:
 
-  _Description_: If TRUE, suppress output
+  _Description_: Reduce logging
 
   _Required_: `false`
 
@@ -190,7 +190,7 @@ The following options are available are available for this action:
 
 * `upgrade-remotes`:
 
-    _Description_: If TRUE, upgrades the 'remotes' R package to the edge version
+    _Description_: Upgrades the 'remotes' R package to the edge version
 
     _Required_: `false`
 
