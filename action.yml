@@ -53,11 +53,11 @@ inputs:
     required: false
     default: true
   quiet:
-    description: If TRUE, suppress output
+    description: Reduce logging
     required: false
     default: true
   upgrade-remotes:
-    description: If TRUE, upgrades the 'remotes' R package to the edge version
+    description: Upgrades the 'remotes' R package to the edge version
     required: false
     default: false
   direction:
@@ -81,6 +81,7 @@ runs:
       shell: bash
       env:
         SD_REPO_PATH: "${{ inputs.path }}"
+        SD_QUIET: "${{ inputs.quiet }}"
         SD_UPGRADE_REMOTES: "${{ inputs.upgrade-remotes }}"
 
     - name: Run staged dependencies
