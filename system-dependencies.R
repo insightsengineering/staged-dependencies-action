@@ -38,6 +38,7 @@ if (v_os_info[["NAME"]] == "Ubuntu") {
     },
     logical(1)
   )
+  cat(paste0("The following system dependencies will be installed: ", sys_pkgs[!has_pkgs], "\n\n"))
   if (any(!has_pkgs)) {
     system2("sudo", c("apt-get", "update"))
     system2("sudo", c("apt-get", "install", "-y", sys_pkgs[!has_pkgs]))
