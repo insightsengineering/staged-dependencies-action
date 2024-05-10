@@ -143,11 +143,15 @@ if (file.exists("staged_dependencies.yaml")) {
   )
 }
 
+cat("=================================================\n")
+cat("Installing any remaining dependencies...\n")
+cat("=================================================\n")
+
 # Install any remaining dependencies
 if (!file.exists("renv.lock") || renv_restore != "true") {
   pak::local_install_deps(
     root = ".",
     upgrade = FALSE,
-    dependencies = TRUE
+    dependencies = NA
   )
 }
