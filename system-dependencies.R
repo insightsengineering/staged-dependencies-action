@@ -7,10 +7,10 @@ cat("Running system dependencies installer\n")
 cat(paste("repo_path: \"", repo_path, "\"\n", sep = ""))
 cat("==================================\n")
 
-# Install the remotes package
-if (!require("remotes")) {
+# Install the pak package
+if (!require("pak")) {
   install.packages(
-    "remotes",
+    "pak",
     upgrade = "never",
     repos = "https://cloud.r-project.org/"
   )
@@ -23,15 +23,11 @@ v_os_info <- setNames(os_info$V2, os_info$V1)
 if (v_os_info[["NAME"]] == "Ubuntu") {
   ubuntu_version <- as.character(v_os_info[["VERSION_ID"]])
   cat(paste("Ubuntu version: \"", ubuntu_version, "\"\n", sep = ""))
-  sys_deps_for_pkg <- remotes::system_requirements(
-    os = "ubuntu",
-    os_release = ubuntu_version,
-    path = repo_path
-  )
-  sys_pgks <- gsub("^apt-get install -y ", "", sys_deps_for_pkg)
-  sys_pgks <- c("libgit2-dev", sys_pgks) # For installing staged.dependencies
+  sys_reqs <- pak::pkg_sysreqs(read.dcf(file.path(repo_path, 'DESCRIPTION'))[,'Package'])
+  sys_pkgs <- strsplit(gsub("^apt-get -y install ", "", sys_reqs["install_scripts"]), '\\s')
+  sys_pkgs <- c("libgit2-dev", sys_pkgs) # For installing staged.dependencies
   has_pkgs <- vapply(
-    sys_pgks,
+    sys_pkgs,
     function(pkg) {
       system2(
         "sudo",
@@ -44,7 +40,7 @@ if (v_os_info[["NAME"]] == "Ubuntu") {
   )
   if (any(!has_pkgs)) {
     system2("sudo", c("apt-get", "update"))
-    system2("sudo", c("apt-get", "install", "-y", sys_pgks[!has_pkgs]))
+    system2("sudo", c("apt-get", "install", "-y", sys_pkgs[!has_pkgs]))
   }
 } else {
   cat(paste(

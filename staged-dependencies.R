@@ -59,10 +59,10 @@ if (threads == "auto") {
   cat(paste("Number of cores detected:", threads, "\n\n"))
 }
 
-# Install the remotes package
-if (!require("remotes", quietly = sd_quiet)) {
+# Install the pak package
+if (!require("pak", quietly = sd_quiet)) {
   install.packages(
-    "remotes",
+    "pak",
     upgrade = "never",
     Ncpus = threads
   )
@@ -99,13 +99,9 @@ if (file.exists("staged_dependencies.yaml")) {
   }
   if (install_sd) {
     cat("Installing Staged Dependencies\n\n")
-    remotes::install_github(
-      "openpharma/staged.dependencies",
-      ref = sd_version,
-      Ncpus = threads,
-      upgrade = "never",
-      force = TRUE,
-      quiet = sd_quiet
+    pak::pkg_install(
+      paste0("openpharma/staged.dependencies@", sd_version),
+      upgrade = FALSE,
     )
   }
 
@@ -149,10 +145,9 @@ if (file.exists("staged_dependencies.yaml")) {
 
 # Install any remaining dependencies
 if (!file.exists("renv.lock") || renv_restore != "true") {
-  remotes::install_deps(
-    dependencies = TRUE,
-    upgrade = "never",
-    Ncpus = threads,
-    quiet = sd_quiet
+  pak::local_install_deps(
+    root = repo_path,
+    upgrade = FALSE,
+    dependencies = TRUE
   )
 }

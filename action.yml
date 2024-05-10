@@ -4,7 +4,8 @@ inputs:
   run-system-dependencies:
     description: Check for and install system dependencies
     required: false
-    default: false
+    # TODO change to false
+    default: true
   git-user-name:
     description: Git user.name configuration for fetching remote staged dependencies
     required: false
