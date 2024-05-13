@@ -31,7 +31,6 @@ token_mapping <- Sys.getenv(
 check <- Sys.getenv("SD_ENABLE_CHECK", "false")
 renv_restore <- Sys.getenv("SD_RENV_RESTORE", "true")
 sd_quiet <- isTRUE(as.logical(Sys.getenv("SD_QUIET", "true")))
-upgrade_remotes <- isTRUE(as.logical(Sys.getenv("SD_UPGRADE_REMOTES", "false")))
 
 cat("\n==================================\n")
 cat("Running staged dependencies installer\n")
@@ -47,7 +46,6 @@ cat(paste("git_user_name: \"", git_user_name, "\"\n", sep = ""))
 cat(paste("git_user_email: \"", git_user_email, "\"\n", sep = ""))
 cat(paste("renv_restore: \"", renv_restore, "\"\n", sep = ""))
 cat(paste("sd_quiet: \"", sd_quiet, "\"\n", sep = ""))
-cat(paste("upgrade_remotes: \"", upgrade_remotes, "\"\n", sep = ""))
 cat(paste("direction: \"", direction, "\"\n", sep = ""))
 cat("==================================\n")
 
@@ -75,13 +73,6 @@ if (!require("pak", quietly = sd_quiet)) {
     upgrade = "never",
     Ncpus = threads
   )
-}
-
-# Upgrade the remotes package to get the latest bugfixes
-if (upgrade_remotes == "true") {
-  remotes::install_github("r-lib/remotes@main")
-  # Reload remotes
-  require(remotes)
 }
 
 # Install dependencies from renv
