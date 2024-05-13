@@ -16,7 +16,7 @@ An example of the output of the action can be seen below:
 
 ## Table of Contents
 
-- [Staged-Dependencies-Action](#staged-dependencies-action)
+- [Staged Dependencies Action](#staged-dependencies-action)
   - [Table of Contents](#table-of-contents)
   - [Getting Started](#getting-started)
   - [Usage Options](#usage-options)
@@ -53,7 +53,7 @@ jobs:
       image: rocker/verse:4.1.0
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Run Staged dependencies
         uses: insightsengineering/staged-dependencies-action@v1
@@ -90,7 +90,7 @@ The following options are available are available for this action:
 
   _Required_: `false`
 
-  _Default_: `False`
+  _Default_: `false`
 
 * `git-user-name`:
 
@@ -122,7 +122,7 @@ The following options are available are available for this action:
 
   _Required_: `false`
 
-  _Default_: `v0.2.7`
+  _Default_: `v0.3.1`
 
 * `threads`:
 
@@ -146,7 +146,7 @@ The following options are available are available for this action:
 
   _Required_: `false`
 
-  _Default_: `False`
+  _Default_: `false`
 
 * `token-mapping`:
 
@@ -162,7 +162,7 @@ The following options are available are available for this action:
 
   _Required_: `false`
 
-  _Default_: `False`
+  _Default_: `false`
 
 * `git-ref`:
 
@@ -178,7 +178,7 @@ The following options are available are available for this action:
 
   _Required_: `false`
 
-  _Default_: `True`
+  _Default_: `true`
 
 * `quiet`:
 
@@ -186,7 +186,23 @@ The following options are available are available for this action:
 
   _Required_: `false`
 
-  _Default_: `True`
+  _Default_: `true`
+
+* `upgrade-remotes`:
+
+    _Description_: If TRUE, upgrades the 'remotes' R package to the edge version
+
+    _Required_: `false`
+
+    _Default_: `false`
+
+* `direction`:
+
+    _Description_: The direction to use to install dependencies. Choose between 'upstream', 'downstream' and 'all'
+
+    _Required_: `false`
+
+    _Default_: `all`
 
 ### Outputs
 

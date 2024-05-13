@@ -13,9 +13,11 @@ git_user_email <- Sys.getenv(
   "27856297+dependabot-preview[bot]@users.noreply.github.com"
 )
 repo_path <- Sys.getenv("SD_REPO_PATH", ".")
-sd_version <- Sys.getenv("SD_STAGED_DEPENDENCIES_VERSION", "v0.2.7")
+sd_version <- Sys.getenv("SD_STAGED_DEPENDENCIES_VERSION", "v0.3.1")
 git_ref <- Sys.getenv("SD_GIT_REF")
 threads <- Sys.getenv("SD_THREADS", "auto")
+direction <- Sys.getenv("SD_DIRECTION", "all")
+if (direction == "") direction <- "all"
 
 cran_repos <- Sys.getenv(
   "SD_CRAN_REPOSITORIES",
@@ -29,7 +31,7 @@ token_mapping <- Sys.getenv(
 check <- Sys.getenv("SD_ENABLE_CHECK", "false")
 renv_restore <- Sys.getenv("SD_RENV_RESTORE", "true")
 sd_quiet <- isTRUE(as.logical(Sys.getenv("SD_QUIET", "true")))
-
+upgrade_remotes <- isTRUE(as.logical(Sys.getenv("SD_UPGRADE_REMOTES", "false")))
 
 cat("\n==================================\n")
 cat("Running staged dependencies installer\n")
@@ -45,6 +47,8 @@ cat(paste("git_user_name: \"", git_user_name, "\"\n", sep = ""))
 cat(paste("git_user_email: \"", git_user_email, "\"\n", sep = ""))
 cat(paste("renv_restore: \"", renv_restore, "\"\n", sep = ""))
 cat(paste("sd_quiet: \"", sd_quiet, "\"\n", sep = ""))
+cat(paste("upgrade_remotes: \"", upgrade_remotes, "\"\n", sep = ""))
+cat(paste("direction: \"", direction, "\"\n", sep = ""))
 cat("==================================\n")
 
 setwd(repo_path)
@@ -59,6 +63,11 @@ if (threads == "auto") {
   cat(paste("Number of cores detected:", threads, "\n\n"))
 }
 
+options(
+  repos = repos,
+  staged.dependencies.token_mapping = split_to_map(token_mapping)
+)
+
 # Install the pak package
 if (!require("pak", quietly = sd_quiet)) {
   install.packages(
@@ -68,10 +77,12 @@ if (!require("pak", quietly = sd_quiet)) {
   )
 }
 
-options(
-  repos = repos,
-  staged.dependencies.token_mapping = split_to_map(token_mapping)
-)
+# Upgrade the remotes package to get the latest bugfixes
+if (upgrade_remotes == "true") {
+  remotes::install_github("r-lib/remotes@main")
+  # Reload remotes
+  require(remotes)
+}
 
 # Install dependencies from renv
 if (file.exists("renv.lock") && renv_restore == "true") {
@@ -89,13 +100,12 @@ if (file.exists("renv.lock") && renv_restore == "true") {
 # Get staged dependencies graph and install dependencies
 if (file.exists("staged_dependencies.yaml")) {
   install_sd <- FALSE
-  if (!require("staged.dependencies", quietly = sd_quiet)) {
-    install_sd <- TRUE
-  }
-  if (require("staged.dependencies", quietly = sd_quiet)) {
+  if ("staged.dependencies" %in% installed.packages()[, "Package"]) {
     if (paste0("v", packageVersion("staged.dependencies")) != sd_version) {
       install_sd <- TRUE
     }
+  } else {
+    install_sd <- TRUE
   }
   if (install_sd) {
     cat("Installing Staged Dependencies\n\n")
@@ -119,9 +129,9 @@ if (file.exists("staged_dependencies.yaml")) {
   if (git_ref != "" &&
     !startsWith(git_ref, "refs/pull") &&
     !startsWith(git_ref, "refs/head")) {
-    x <- staged.dependencies::dependency_table(ref = git_ref)
+    x <- staged.dependencies::dependency_table(ref = git_ref, direction = direction)
   } else {
-    x <- staged.dependencies::dependency_table()
+    x <- staged.dependencies::dependency_table(direction = direction)
   }
 
   print(x, width = 120)
