@@ -146,28 +146,15 @@ if (file.exists("staged_dependencies.yaml")) {
 
 # Install any remaining dependencies
 if (!file.exists("renv.lock") || renv_restore != "true") {
+  # https://pak.r-lib.org/reference/local_install_deps.html#arguments
+  # dependencies = NA (only required (hard) dependencies), because e.g. in case of teal,
+  # running with dependencies = TRUE, causes installation of Google Chrome.
   cat("=================================================\n")
-  cat("Running local_install_deps with dependencies = FALSE...\n")
-  cat("=================================================\n")
-  pak::local_install_deps(
-    root = ".",
-    upgrade = FALSE,
-    dependencies = FALSE
-  )
-  cat("=================================================\n")
-  cat("Running local_install_deps with dependencies = NA...\n")
+  cat("Installing remaining dependencies...\n")
   cat("=================================================\n")
   pak::local_install_deps(
     root = ".",
     upgrade = FALSE,
     dependencies = NA
-  )
-  cat("=================================================\n")
-  cat("Running local_install_deps with dependencies = TRUE...\n")
-  cat("=================================================\n")
-  pak::local_install_deps(
-    root = ".",
-    upgrade = FALSE,
-    dependencies = TRUE
   )
 }
