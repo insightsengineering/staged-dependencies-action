@@ -44,6 +44,8 @@ if (v_os_info[["NAME"]] == "Ubuntu") {
     cat(sys_pkgs[!has_pkgs])
     system2("sudo", c("apt-get", "update"))
     system2("sudo", c("apt-get", "install", "-y", sys_pkgs[!has_pkgs]))
+  } else {
+    cat("\nLooks like all the required system dependencies are installed.\n")
   }
 } else {
   cat(paste(
