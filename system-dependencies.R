@@ -25,7 +25,8 @@ if (v_os_info[["NAME"]] == "Ubuntu") {
   sys_reqs <- pak::pkg_sysreqs(read.dcf(file.path(repo_path, 'DESCRIPTION'))[,'Package'])
   sys_pkgs <- strsplit(gsub("^apt-get -y install ", "", sys_reqs["install_scripts"]), '\\s')
   sys_pkgs <- c("libgit2-dev", sys_pkgs) # For installing staged.dependencies
-  cat(paste0("Checking if the following dependencies are installed: ", sys_pkgs, "\n\n"))
+  cat("\nChecking if the following dependencies are installed:\n"))
+  cat(sys_pkgs)
   has_pkgs <- vapply(
     sys_pkgs,
     function(pkg) {
@@ -38,8 +39,9 @@ if (v_os_info[["NAME"]] == "Ubuntu") {
     },
     logical(1)
   )
-  cat(paste0("The following system dependencies will be installed: ", sys_pkgs[!has_pkgs], "\n\n"))
   if (any(!has_pkgs)) {
+    cat("\nThe following system dependencies will be installed:\n")
+    cat(sys_pkgs[!has_pkgs])
     system2("sudo", c("apt-get", "update"))
     system2("sudo", c("apt-get", "install", "-y", sys_pkgs[!has_pkgs]))
   }
