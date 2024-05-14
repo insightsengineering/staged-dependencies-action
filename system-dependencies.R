@@ -22,36 +22,48 @@ v_os_info <- setNames(os_info$V2, os_info$V1)
 if (v_os_info[["NAME"]] == "Ubuntu") {
   ubuntu_version <- as.character(v_os_info[["VERSION_ID"]])
   cat(paste("Ubuntu version: \"", ubuntu_version, "\"\n", sep = ""))
-  sys_reqs <- pak::pkg_sysreqs(read.dcf(file.path(repo_path, 'DESCRIPTION'))[,'Package'])
-  # sys_reqs <- pak::pkg_sysreqs(paste0("./", file.path(repo_path)))
-  sys_pkgs <- c(unlist(strsplit(gsub("^apt-get -y install ", "", sys_reqs["install_scripts"]), '\\s')))
-  if (length(sys_pkgs) > 0) {
-    sys_pkgs <- c("libgit2-dev", sys_pkgs) # For installing staged.dependencies
-  } else {
-    sys_pkgs <- c("libgit2-dev")
-  }
-  cat("\nChecking if the following dependencies are installed:\n")
-  cat(sys_pkgs)
-  has_pkgs <- vapply(
-    sys_pkgs,
-    function(pkg) {
-      system2(
-        "sudo",
-        c("dpkg", "-l", pkg),
-        stdout = NULL,
-        stderr = NULL
-      ) == 0
+  tryCatch(
+    {
+      sys_reqs <- pak::pkg_sysreqs(read.dcf(file.path(repo_path, 'DESCRIPTION'))[,'Package'])
+      sys_pkgs <- c(unlist(strsplit(gsub("^apt-get -y install ", "", sys_reqs["install_scripts"]), '\\s')))
+      if (length(sys_pkgs) > 0) {
+        sys_pkgs <- c("libgit2-dev", sys_pkgs) # For installing staged.dependencies
+      } else {
+        sys_pkgs <- c("libgit2-dev")
+      }
+      cat("\nChecking if the following dependencies are installed:\n")
+      cat(sys_pkgs)
+      has_pkgs <- vapply(
+        sys_pkgs,
+        function(pkg) {
+          system2(
+            "sudo",
+            c("dpkg", "-l", pkg),
+            stdout = NULL,
+            stderr = NULL
+          ) == 0
+        },
+        logical(1)
+      )
+      if (any(!has_pkgs)) {
+        cat("\nThe following system dependencies will be installed:\n")
+        cat(sys_pkgs[!has_pkgs])
+        system2("sudo", c("apt-get", "update"))
+        system2("sudo", c("apt-get", "install", "-y", sys_pkgs[!has_pkgs]))
+      } else {
+        cat("\nLooks like all the required system dependencies are installed.\n")
+      }
     },
-    logical(1)
+    error = function(x) {
+      cat("An error occurred while installing system dependencies:")
+      cat(x)
+    },
+    warning = function(x) {
+      cat("A warning occurred while installing system dependencies:")
+      cat(x)
+    }
   )
-  if (any(!has_pkgs)) {
-    cat("\nThe following system dependencies will be installed:\n")
-    cat(sys_pkgs[!has_pkgs])
-    system2("sudo", c("apt-get", "update"))
-    system2("sudo", c("apt-get", "install", "-y", sys_pkgs[!has_pkgs]))
-  } else {
-    cat("\nLooks like all the required system dependencies are installed.\n")
-  }
+
 } else {
   cat(paste(
     "System dependencies not implemented for os:",
