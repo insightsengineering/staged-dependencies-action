@@ -120,7 +120,10 @@ if (file.exists("staged_dependencies.yaml")) {
   if (git_ref != "" &&
     !startsWith(git_ref, "refs/pull") &&
     !startsWith(git_ref, "refs/head")) {
-    x <- staged.dependencies::dependency_table(ref = git_ref, direction = direction)
+    x <- staged.dependencies::dependency_table(
+      ref = git_ref,
+      direction = direction
+    )
   } else {
     x <- staged.dependencies::dependency_table(direction = direction)
   }

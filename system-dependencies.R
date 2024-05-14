@@ -24,10 +24,15 @@ if (v_os_info[["NAME"]] == "Ubuntu") {
   cat(paste("Ubuntu version: \"", ubuntu_version, "\"\n", sep = ""))
   tryCatch(
     {
-      sys_reqs <- pak::pkg_sysreqs(read.dcf(file.path(repo_path, 'DESCRIPTION'))[,'Package'])
-      sys_pkgs <- c(unlist(strsplit(gsub("^apt-get -y install ", "", sys_reqs["install_scripts"]), '\\s')))
+      sys_reqs <- pak::pkg_sysreqs(
+        read.dcf(file.path(repo_path, "DESCRIPTION"))[,"Package"]
+      )
+      sys_pkgs <- c(unlist(strsplit(
+        gsub("^apt-get -y install ", "", sys_reqs["install_scripts"]), "\\s"
+      )))
       if (length(sys_pkgs) > 0) {
-        sys_pkgs <- c("libgit2-dev", sys_pkgs) # For installing staged.dependencies
+        # For installing staged.dependencies
+        sys_pkgs <- c("libgit2-dev", sys_pkgs)
       } else {
         sys_pkgs <- c("libgit2-dev")
       }
@@ -51,9 +56,15 @@ if (v_os_info[["NAME"]] == "Ubuntu") {
         system2("sudo", c("apt-get", "update"))
         system2("sudo", c("apt-get", "install", "-y", sys_pkgs[!has_pkgs]))
       } else {
-        cat("\nLooks like all the required system dependencies are installed.\n")
+        cat(
+          "\nLooks like all the required system dependencies are installed.\n"
+        )
       }
     },
+    # This error handling is with pak::pkg_sysreqs() in mind.
+    # If a package is missing from pak database
+    # (e.g. because it's not publicly available),
+    # pak will fail to determine system dependencies.
     error = function(x) {
       cat("An error occurred while installing system dependencies:\n")
       message(conditionMessage(x))
