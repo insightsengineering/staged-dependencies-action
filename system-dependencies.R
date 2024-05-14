@@ -55,12 +55,12 @@ if (v_os_info[["NAME"]] == "Ubuntu") {
       }
     },
     error = function(x) {
-      cat("An error occurred while installing system dependencies:")
-      cat(x)
+      cat("An error occurred while installing system dependencies:\n")
+      message(conditionMessage(x))
     },
     warning = function(x) {
-      cat("A warning occurred while installing system dependencies:")
-      cat(x)
+      cat("A warning occurred while installing system dependencies:\n")
+      message(conditionMessage(x))
     }
   )
 
