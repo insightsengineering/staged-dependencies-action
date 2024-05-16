@@ -65,6 +65,11 @@ if (v_os_info[["NAME"]] == "Ubuntu") {
     # If a package is missing from pak database
     # (e.g. because it's not publicly available),
     # pak will fail to determine system dependencies.
+
+    # TODO To consider: download development version of packages (for example teal.reporter required by teal).
+    # But won't this cause unintended installation of development versions of other packages?
+    # pak::repo_add("R-universe" = "https://insightsengineering.r-universe.dev")
+
     error = function(x) {
       cat("An error occurred while installing system dependencies:\n")
       message(conditionMessage(x))
