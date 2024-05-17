@@ -56,10 +56,6 @@ inputs:
     description: If TRUE, suppress output
     required: false
     default: true
-  upgrade-remotes:
-    description: If TRUE, upgrades the 'remotes' R package to the edge version
-    required: false
-    default: false
   direction:
     description: The direction to use to install dependencies. Choose between 'upstream', 'downstream' and 'all'
     required: false
@@ -81,7 +77,6 @@ runs:
       shell: bash
       env:
         SD_REPO_PATH: "${{ inputs.path }}"
-        SD_UPGRADE_REMOTES: "${{ inputs.upgrade-remotes }}"
 
     - name: Run staged dependencies
       run: ${GITHUB_ACTION_PATH}/staged-dependencies.R
@@ -99,5 +94,4 @@ runs:
         SD_RENV_RESTORE: "${{ inputs.renv-restore }}"
         SD_GIT_REF: "${{ inputs.git-ref }}"
         SD_QUIET: "${{ inputs.quiet }}"
-        SD_UPGRADE_REMOTES: "${{ inputs.upgrade-remotes }}"
         SD_DIRECTION: "${{ inputs.direction }}"

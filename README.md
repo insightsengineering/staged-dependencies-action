@@ -83,14 +83,13 @@ The following options are available are available for this action:
 
 <!-- BEGIN_ACTION_DOC -->
 ### Inputs
-
 * `run-system-dependencies`:
 
   _Description_: Check for and install system dependencies
 
   _Required_: `false`
 
-  _Default_: `false`
+  _Default_: `False`
 
 * `git-user-name`:
 
@@ -126,11 +125,11 @@ The following options are available are available for this action:
 
 * `threads`:
 
-  *Description*: Number of threads to use. Set to 'auto' to use max available threads
+  _Description_: Number of threads to use. Set to 'auto' to use max available threads
 
   _Required_: `false`
 
-  _Default_: `1`
+  _Default_: `auto`
 
 * `cran-repos`:
 
@@ -146,11 +145,12 @@ The following options are available are available for this action:
 
   _Required_: `false`
 
-  _Default_: `false`
+  _Default_: `False`
 
 * `token-mapping`:
 
   _Description_: Token mapping that is used in `staged.dependencies.token_mapping` delimited by comma. Note that you will need to set these tokens with their respective values as environment variables while using this action.
+
 
   _Required_: `false`
 
@@ -162,7 +162,7 @@ The following options are available are available for this action:
 
   _Required_: `false`
 
-  _Default_: `false`
+  _Default_: `False`
 
 * `git-ref`:
 
@@ -178,7 +178,7 @@ The following options are available are available for this action:
 
   _Required_: `false`
 
-  _Default_: `true`
+  _Default_: `True`
 
 * `quiet`:
 
@@ -186,26 +186,17 @@ The following options are available are available for this action:
 
   _Required_: `false`
 
-  _Default_: `true`
-
-* `upgrade-remotes`:
-
-    _Description_: If TRUE, upgrades the 'remotes' R package to the edge version
-
-    _Required_: `false`
-
-    _Default_: `false`
+  _Default_: `True`
 
 * `direction`:
 
-    _Description_: The direction to use to install dependencies. Choose between 'upstream', 'downstream' and 'all'
+  _Description_: The direction to use to install dependencies. Choose between 'upstream', 'downstream' and 'all'
 
-    _Required_: `false`
+  _Required_: `false`
 
-    _Default_: `all`
+  _Default_: `all`
 
 ### Outputs
-
 None
 <!-- END_ACTION_DOC -->
 
