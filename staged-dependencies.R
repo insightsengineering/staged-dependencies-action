@@ -146,3 +146,11 @@ if (file.exists("staged_dependencies.yaml")) {
     quiet = sd_quiet
   )
 }
+
+# Install any remaining dependencies.
+if (!file.exists("renv.lock") || renv_restore != "true") {
+  pak::local_install_deps(
+    dependencies = TRUE,
+    upgrade = FALSE
+  )
+}
