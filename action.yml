@@ -67,6 +67,13 @@ branding:
 runs:
   using: "composite"
   steps:
+
+    - name: ⚠️ THIS ACTION IS DEPRECATED ⚠️
+      run: |
+        echo "WARNING: This action is deprecated and will not receive further updates."
+        echo "Please consider using the 'insightsengineering/setup-r-dependencies' action instead."
+      shell: bash
+
     - name: Run system dependencies
       run: |
         if [ "${{ inputs.run-system-dependencies }}" == "true" ]
