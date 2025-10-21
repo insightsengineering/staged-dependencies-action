@@ -1,3 +1,7 @@
+⚠️ **This GitHub Action is deprecated and will receive no further updates.** ⚠️
+
+Please consider using [`insightsengineering/setup-r-dependencies`](https://github.com/insightsengineering/setup-r-dependencies) instead.
+
 # Staged Dependencies Action
 
 Github Action to install R package and system dependencies, based on the [`{staged.dependencies}`](https://github.com/openpharma/staged.dependencies) R package.
