@@ -1,6 +1,6 @@
 ⚠️ **This GitHub Action is deprecated and will receive no further updates.** ⚠️
 
-Please consider using [`staged-dependencies-action`](https://github.com/insightsengineering/staged-dependencies-action) instead.
+Please consider using [`insightsengineering/setup-r-dependencies`](https://github.com/insightsengineering/setup-r-dependencies) instead.
 
 # Staged Dependencies Action
 
